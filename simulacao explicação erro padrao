@@ -1,0 +1,33 @@
+# Simulação de uma população de pacientes diabéticos
+set.seed(42)  # Para reprodutibilidade
+populacao_glicose <- rnorm(10000, mean = 150, sd = 30)  # Média 150 mg/dL, desvio padrão 30
+
+# Definir tamanho das amostras e número de amostras
+tamanho_amostra <- 50
+num_amostras <- 100
+
+# Criar um vetor para armazenar as médias das amostras
+medias_amostrais <- numeric(num_amostras)
+
+# Coletar várias amostras e calcular suas médias
+for (i in 1:num_amostras) {
+  amostra <- sample(populacao_glicose, tamanho_amostra, replace = TRUE)
+  medias_amostrais[i] <- mean(amostra)
+}
+
+# Calcular média das médias amostrais e erro padrão
+media_das_medias <- mean(medias_amostrais)
+erro_padrao <- sd(medias_amostrais)
+
+# Visualizar a distribuição das médias amostrais
+hist(medias_amostrais, main = "Distribuição das Médias Amostrais de Glicose",
+     xlab = "Média da Glicose (mg/dL)", col = "lightblue", border = "black", freq = FALSE)
+
+# Adicionar curva normal ajustada
+curve(dnorm(x, mean = media_das_medias, sd = erro_padrao),
+      add = TRUE, col = "red", lwd = 2)
+
+# Exibir estatísticas
+cat("Média da População:", mean(populacao_glicose), "\n")
+cat("Média das Médias Amostrais:", media_das_medias, "\n")
+cat("Erro Padrão da Média (SEM):", erro_padrao, "\n")
