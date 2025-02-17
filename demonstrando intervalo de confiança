@@ -1,0 +1,42 @@
+# Definir os parâmetros
+set.seed(42)
+populacao <- rnorm(10000, mean = 100, sd = 15)  # Criando a população
+tamanho_amostra <- 80  # Tamanho da amostra
+num_amostras <- 100  # Número de amostras
+
+# Criar um data frame para armazenar os resultados
+resultados <- data.frame(Amostra = 1:num_amostras, Media = NA, IC_Lower = NA, IC_Upper = NA)
+
+# Loop para coletar as amostras e calcular os intervalos de confiança
+for (i in 1:num_amostras) {
+  amostra <- sample(populacao, tamanho_amostra, replace = TRUE)  # Sorteio da amostra
+  media_amostra <- mean(amostra)  # Média da amostra
+  erro_padrao <- sd(amostra) / sqrt(tamanho_amostra)  # Erro padrão da média
+  # Escolher entre t-Student ou Normal baseado no tamanho da amostra
+  if (tamanho_amostra > 30) {
+    intervalo <- qnorm(0.975) * erro_padrao  # Usar Z para amostras grandes (intervalo de 95% - z = 1.96)
+  } else {
+    intervalo <- qt(0.975, df = tamanho_amostra - 1) * erro_padrao  # Usar t-Student para n ≤ 30
+  }
+  
+  # Armazenar os resultados
+  resultados$Media[i] <- media_amostra
+  resultados$IC_Lower[i] <- media_amostra - intervalo
+  resultados$IC_Upper[i] <- media_amostra + intervalo
+}
+
+# Visualizar as primeiras linhas do resultado
+head(resultados)
+
+# Visualização dos intervalos de confiança
+
+library(ggplot2)
+
+ggplot(resultados, aes(x = Media, y = Amostra)) +
+  geom_point(color = 'blue', size=2) +
+  geom_errorbar(aes(xmin = IC_Lower, xmax = IC_Upper), width=1, color='red') +
+  geom_vline(xintercept = mean(populacao), linetype = 'dashed', size=1) +
+  labs(title = "Intervalos de Confiança das Amostras",
+       x = "Número da Amostra",
+       y = "Média da Amostra") +
+  theme_minimal()
