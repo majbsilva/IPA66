@@ -1,33 +1,34 @@
 # Simulação de uma população de pacientes diabéticos
 set.seed(42)  # Para reprodutibilidade
-populacao_glicose <- rnorm(10000, mean = 150, sd = 30)  # Média 150 mg/dL, desvio padrão 30
+populacao <- rnorm(10000, mean = 150, sd = 30)  # Média 150 mg/dL, desvio padrão 30
 
 # Definir tamanho das amostras e número de amostras
 tamanho_amostra <- 50
-num_amostras <- 100
+número_amostra <- 100
 
 # Criar um vetor para armazenar as médias das amostras
-medias_amostrais <- numeric(num_amostras)
+medias_amostrais <- numeric(número_amostra)
 
-# Coletar várias amostras e calcular suas médias
-for (i in 1:num_amostras) {
-  amostra <- sample(populacao_glicose, tamanho_amostra, replace = TRUE)
+for (i in 1:número_amostra) {
+  amostra <- sample(populacao,tamanho_amostra,replace = T)
   medias_amostrais[i] <- mean(amostra)
 }
 
+round(medias_amostrais,1)
+
 # Calcular média das médias amostrais e erro padrão
-media_das_medias <- mean(medias_amostrais)
-erro_padrao <- sd(medias_amostrais)
+media_das_medias <- round(mean(medias_amostrais),1)
+erro_padrao <- round(sd(medias_amostrais),1)
 
 # Visualizar a distribuição das médias amostrais
-hist(medias_amostrais, main = "Distribuição das Médias Amostrais de Glicose",
-     xlab = "Média da Glicose (mg/dL)", col = "lightblue", border = "black", freq = FALSE)
+hist(medias_amostrais, breaks = 10, main = 'Distribuição das médias amsotrais de Glicose',
+     xlab = 'Média da glicose (g/dL)', col = 'lightblue', border = 'black', freq = F) # F significa que o histograma mostrará a desnidade das probabilidades. Isso é para quando eu quero sobrepor a curva de normalidade.
 
 # Adicionar curva normal ajustada
-curve(dnorm(x, mean = media_das_medias, sd = erro_padrao),
-      add = TRUE, col = "red", lwd = 2)
+ccurve(dnorm(x, mean = media_das_medias, sd = erro_padrao),
+      add = T, col = 'red', lwd=2)
 
 # Exibir estatísticas
-cat("Média da População:", mean(populacao_glicose), "\n")
-cat("Média das Médias Amostrais:", media_das_medias, "\n")
-cat("Erro Padrão da Média (SEM):", erro_padrao, "\n")
+cat('Média da população:', paste(round(mean(populacao),1),'mg/dL'),'\n')
+cat('Média das médias amotrais', media_das_medias,'\n')
+cat('Erro padrão das médias', erro_padrao,'\n')
