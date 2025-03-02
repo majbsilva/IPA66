@@ -50,11 +50,17 @@ curtose_assimetria <- pacote pastecs, funcao stat.desc
 
 
 # Criar um histograma com curva de densidade para visualização
-ggplot(dados, aes(x = Valores)) +
-  geom_histogram(aes(y = ..density..), bins = 15) +
-  geom_density() +
-  geom_vline(aes(xintercept = mean(Valores)), linetype = "dashed") +
-  geom_vline(aes(xintercept = median(Valores)), linetype = "dashed") +
-  ggtitle("Distribuição dos Dados com Média e Mediana") +
-  theme_minimal() +
-  labs(x = "Valores", y = "Densidade")
+ggplot(dados, aes(x = Assimetria_Positiva)) +
+    geom_histogram(
+      aes(y = ..count..)
+    ) + 
+    geom_vline(
+      aes(xintercept = mean(Assimetria_Positiva)),
+      linetype = 'dashed'
+    ) + 
+    labs(
+      title = 'Distribuição dos dados com média e mediana',
+      x = 'Dados assimétricos positivos',
+      y = 'Frequência'
+    ) + # vem da palavra label que é 'rótulos'
+    theme_minimal()
