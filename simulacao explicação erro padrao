@@ -1,10 +1,12 @@
+library(pROC)
+
 # Simulação de uma população de pacientes diabéticos
 set.seed(42)  # Para reprodutibilidade
 populacao <- rnorm(10000, mean = 150, sd = 30)  # Média 150 mg/dL, desvio padrão 30
 
 # Definir tamanho das amostras e número de amostras
-tamanho_amostra <- 50
-número_amostra <- 100
+tamanho_amostra <- 10
+número_amostra <- 50
 
 # Criar um vetor para armazenar as médias das amostras
 medias_amostrais <- numeric(número_amostra)
@@ -21,12 +23,9 @@ media_das_medias <- round(mean(medias_amostrais),1)
 erro_padrao <- round(sd(medias_amostrais),1)
 
 # Visualizar a distribuição das médias amostrais
-hist(medias_amostrais, breaks = 10, main = 'Distribuição das médias amsotrais de Glicose',
+hist(medias_amostrais, breaks = 10, main = 'Distribuição das médias amostrais de Glicose',
      xlab = 'Média da glicose (g/dL)', col = 'lightblue', border = 'black', freq = F) # F significa que o histograma mostrará a desnidade das probabilidades. Isso é para quando eu quero sobrepor a curva de normalidade.
 
-# Adicionar curva normal ajustada
-ccurve(dnorm(x, mean = media_das_medias, sd = erro_padrao),
-      add = T, col = 'red', lwd=2)
 
 # Exibir estatísticas
 cat('Média da população:', paste(round(mean(populacao),1),'mg/dL'),'\n')
