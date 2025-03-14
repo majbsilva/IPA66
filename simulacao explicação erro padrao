@@ -2,30 +2,41 @@
 set.seed(42)  # Para reprodutibilidade
 populacao <- rnorm(10000, mean = 150, sd = 30)  # Média 150 mg/dL, desvio padrão 30
 
-# Definir tamanho das amostras e número de amostras
-tamanho_amostra <- 10
-número_amostra <- 50
+# Definir diferentes tamanhos de amostras
+tamanhos_amostra <- c(10, 30, 50, 100, 200)
+numero_amostra <- 1000  # Número de amostras para cada tamanho
 
-# Criar um vetor para armazenar as médias das amostras
-medias_amostrais <- numeric(número_amostra)
+# Inicializar vetores para armazenar os erros padrão e médias amostrais
+erros_padrao <- numeric(length(tamanhos_amostra))
 
-for (i in 1:número_amostra) {
-  amostra <- sample(populacao,tamanho_amostra,replace = T)
-  medias_amostrais[i] <- mean(amostra)
+# Calcular o erro padrão e plotar histogramas para cada tamanho de amostra
+for (i in seq_along(tamanhos_amostra)) {
+  medias_amostrais <- numeric(numero_amostra)
+  for (j in 1:numero_amostra) {
+    amostra <- sample(populacao, tamanhos_amostra[i], replace = TRUE)
+    medias_amostrais[j] <- mean(amostra)
+  }
+  erros_padrao[i] <- sd(medias_amostrais)/sqrt(length(medias_amostrais))
+  
+  # Plotar histograma das médias amostrais
+  hist(medias_amostrais, breaks = 30, main = paste('Distribuição das Médias Amostrais (n =', tamanhos_amostra[i], ')'),
+       xlab = 'Média da Glicose (mg/dL)', col = 'lightgreen', border = 'black', freq = FALSE)
+  abline(v = mean(populacao), col = 'red', lwd = 2)  # Linha vermelha para a média da população
 }
 
-round(medias_amostrais,1)
+# Visualizar a variação do erro padrão com o tamanho da amostra
+plot(tamanhos_amostra, erros_padrao, type = "b", col = "blue", pch = 19,
+     xlab = "Tamanho da Amostra", ylab = "Erro Padrão da Média",
+     main = "Variação do Erro Padrão com o Tamanho da Amostra",
+     ylim = c(0, max(erros_padrao)))
 
-# Calcular média das médias amostrais e erro padrão
-media_das_medias <- round(mean(medias_amostrais),1)
-erro_padrao <- round(sd(medias_amostrais),1)
+# Exibir os erros padrão calculados
+cat("Erros padrão para diferentes tamanhos de amostra:\n")
+for (i in seq_along(tamanhos_amostra)) {
+  cat("Tamanho da amostra:", tamanhos_amostra[i], "-> Erro padrão:", erros_padrao[i], "\n")
+}
 
-# Visualizar a distribuição das médias amostrais
-hist(medias_amostrais, breaks = 10, main = 'Distribuição das médias amostrais de Glicose',
-     xlab = 'Média da glicose (g/dL)', col = 'lightblue', border = 'black', freq = F) # F significa que o histograma mostrará a desnidade das probabilidades. Isso é para quando eu quero sobrepor a curva de normalidade.
-
-
-# Exibir estatísticas
-cat('Média da população:', paste(round(mean(populacao),1),'mg/dL'),'\n')
-cat('Média das médias amotrais', media_das_medias,'\n')
-cat('Erro padrão das médias', erro_padrao,'\n')
+# Calcular e plotar o erro padrão teórico
+erros_padrao_teoricos <- sd(populacao) / sqrt(tamanhos_amostra)
+points(tamanhos_amostra, erros_padrao_teoricos, type = "b", col = "red", pch = 17)
+legend("topright", legend = c("Erro Padrão Observado", "Erro Padrão Teórico"), col = c("blue", "red"), pch = c(19, 17), bty = "n")
