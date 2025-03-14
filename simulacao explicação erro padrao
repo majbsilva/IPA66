@@ -1,5 +1,3 @@
-library(pROC)
-
 # Simulação de uma população de pacientes diabéticos
 set.seed(42)  # Para reprodutibilidade
 populacao <- rnorm(10000, mean = 150, sd = 30)  # Média 150 mg/dL, desvio padrão 30
