@@ -35,7 +35,7 @@ library(ggplot2)
 ggplot(resultados, aes(x = Media, y = Amostra)) +
   geom_point(color = 'blue', size=2) +
   geom_errorbar(aes(xmin = IC_Lower, xmax = IC_Upper), width=1, color='red') +
-  geom_vline(xintercept = mean(populacao), linetype = 'dashed', size=1) +
+  geom_vline(xintercept = mean(populacao), linetype = 'dashed', linewidth=1) +
   labs(title = "Intervalos de Confiança das Amostras",
        x = "Número da Amostra",
        y = "Média da Amostra") +
