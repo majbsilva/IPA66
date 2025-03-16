@@ -1,11 +1,21 @@
-## AVALIANDO O PODER DO EFEITO
-cohens_d(a,b)
+# Criando os dados
+
+dados <- c(56,59,61,62,63,64,65,67,68,70,72,73,74,75,78,80,150)
 
 # AVALIANDO OUTLIER
 
 ## Método Zscore
 
-## Pelo método do IQR
+zscore <- round((dados - mean(dados))/ sd(dados),2)
+outliers <- dados[abs(zscore)>2.58]
 
-library(rstatix)
-is_outlier(dados)
+
+## Pelo método do IQR
+boxplot(dados)
+Q1 <- quantile(dados, 0.25)
+Q3 <- quantile(dados, 0.75)
+IQR <- Q3 - Q1
+limite_inferior <- Q1 - 1.5 * IQR
+limite_superior <- Q3 + 1.5 * IQR
+
+outliers_IQR <- dados[dados<limite_inferior | dados>limite_superior]
