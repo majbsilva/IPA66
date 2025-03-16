@@ -1,0 +1,11 @@
+## AVALIANDO O PODER DO EFEITO
+cohens_d(a,b)
+
+# AVALIANDO OUTLIER
+
+## Método Zscore
+
+## Pelo método do IQR
+
+library(rstatix)
+is_outlier(dados)
