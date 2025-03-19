@@ -23,6 +23,14 @@ airquality %>% filter(!complete.cases(.)) %>% head(10) %>% pander(justify = 'lef
 df %>% 
   select_if(is.numeric | is.integer | is.character) %>% 
   table_report()
+
+df %>% 
+  select_if(is.numeric | is.integer | is.character) %>% 
+  Desc()
+
+#---Observações atípicas---
+## São aquelas que uma combinação única de características identificáveis que as classifica como notavelmente diferente.
+
   
 # ---Categorizando a variável idade---
 df %>% 
