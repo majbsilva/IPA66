@@ -29,7 +29,23 @@ df %>%
   Desc()
 
 #---Observações atípicas---
-## São aquelas que uma combinação única de características identificáveis que as classifica como notavelmente diferente.
+## São aquelas que uma combinação única de características identificáveis que as classifica como notavelmente diferente das outras observações.
+
+##---Removendo observaçoes atípipcas---
+dados <- dados[dados != 275]
+dados <- dados[!dados %in% outliers]
+
+### De um dataframe
+df_clean  <- df %>% filter(variavel %in% outlier)
+
+##---Trocando observações atípicas por NAs----
+df <- df %>% mutate(
+        variavel = ifelse(variavel %in% outlier,NA_real_,variavel)) 
+
+### NA_real_: É usado para especificar explicitamente que o NA é do tipo numérico (real).
+Isso é necessário porque if_else precisa garantir que os tipos de retorno sejam consistentes.
+Tipos de NA: Em R, existem diferentes tipos de NA para diferentes tipos de dados, como NA_integer_, NA_character_, etc. 
+Usar NA_real_ garante que o valor NA é do tipo numérico, o que é apropriado para colunas numéricas.
 
   
 # ---Categorizando a variável idade---
