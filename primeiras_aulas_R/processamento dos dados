@@ -1,0 +1,37 @@
+# EM CONSTRUÇÃO
+
+
+# ---Carregamento de pacotes---
+library(dplyr) # manipulação de tabelas
+library(naniar) # para lidar com Not Annotated (NA)
+library(pander)
+
+#---Criação ou importação dos dados---
+read.csv
+
+#---Lidando com valores ausentes---
+
+##---Identificando valores ausentes e visualizando---
+
+pander(miss_var_summary(airquality), justify = 'left')
+
+gg_miss_var(airquality)
+
+airquality %>% filter(!complete.cases(.)) %>% head(10) %>% pander(justify = 'left')
+
+# ---Seleção dos dados numericos---
+df %>% 
+  select_if(is.numeric | is.integer | is.character) %>% 
+  table_report()
+  
+# ---Categorizando a variável idade---
+df %>% 
+  mutate(
+    idade_categoria = case_when(
+      idade < 40 ~ "Menor que 40",
+      idade >= 40 & idade <= 59 ~ "Entre 40 e 59",
+      idade > 59 ~ "Acima de 59"
+    )
+  ) 
+
+
