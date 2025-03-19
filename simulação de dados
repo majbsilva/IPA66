@@ -22,3 +22,50 @@ write.csv(simulado,'simulado.csv')
 
 mean(valores)
 sd(valores)
+
+####################################################################################
+
+# rnorm(): Gera números aleatórios de uma distribuição normal.
+# 
+# Parâmetros: n (número de observações), mean (média), sd (desvio padrão).
+# rexp(): Gera números aleatórios de uma distribuição exponencial.
+# 
+# Parâmetros: n (número de observações), rate (taxa, que é o inverso da média).
+# runif(): Gera números aleatórios de uma distribuição uniforme.
+# 
+# Parâmetros: n (número de observações), min (valor mínimo), max (valor máximo).
+# rbinom(): Gera números aleatórios de uma distribuição binomial.
+# 
+# Parâmetros: n (número de observações), size (número de tentativas), prob (probabilidade de sucesso em cada tentativa).
+# rpois(): Gera números aleatórios de uma distribuição de Poisson.
+# 
+# 
+# Parâmetros: n (número de observações), location (localização), scale (escala).
+# rchisq(): Gera números aleatórios de uma distribuição qui-quadrado.
+# 
+# Parâmetros: n (número de observações), df (graus de liberdade).
+# rt(): Gera números aleatórios de uma distribuição t de Student.
+
+
+library(report)
+library(tidyverse)
+
+set.seed(123)
+var1 <- sample(10:20,50,replace = T)
+var2 <- sample(10:40,50,replace = T)
+var3 <- rnorm(50, 10, 2)
+var4 <- rexp(50,1)
+var5 <- rlogis(50,0,1)
+var6 <- rchisq(50,2)
+var7 <- rpois(50,2)
+var8 <- rbinom(50,100,0.8)
+
+
+hist(var8)
+abline(v = mean(var6), col = 'red', lwd = 2)
+abline(v = median(var6), col = 'blue', lwd = 2)
+
+
+hist(var3)
+abline(v = mean(var3), col = 'red', lwd = 2)
+abline(v = median(var3), col = 'blue', lwd = 2)
