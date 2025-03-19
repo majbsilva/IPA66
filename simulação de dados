@@ -1,0 +1,24 @@
+library(simstudy)
+
+# Definição de variáveis
+set.seed(123)
+valores = rexp(500, rate = 1)
+valores_normais = rnorm(500, 1.2, 0.4)
+valores_normais1 = rnorm(499, 1.2, 0.4)
+outliers <- 10
+valores_normais_outlier = c(valores_normais1,outliers)
+grupos = rbinom(500, size = 1, prob = 0.65)
+
+
+simulado <- data.frame(
+  valores = valores,
+  valores_normais = valores_normais,
+  valores_normais_outlier = valores_normais_outlier,
+  grupos = rbinom(500, size = 1, prob = 0.65)
+  
+)
+
+write.csv(simulado,'simulado.csv')
+
+mean(valores)
+sd(valores)
