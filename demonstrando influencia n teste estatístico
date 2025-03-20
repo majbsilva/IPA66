@@ -1,0 +1,25 @@
+library(gt)
+library(dplyr)
+library(broom)
+library(effectsize) 
+
+source('/Users/marcelosilva/Library/CloudStorage/OneDrive-UniversidadeFederaldeUberlândia/UFU/Cursos/IPA66/Arquivos R/Minhas funções/Funçao formatar tabela teste t.R')
+
+
+seed(123)
+a <- rnorm(300, 25.3,2)
+b <- rnorm(300, 24.8,2)
+
+resultado <- t.test(a,b,var.equal = T)
+formatar_t_test(resultado)
+
+
+c <- rnorm(30, 25.3,2)
+d <- rnorm(30, 24.8,2)
+
+resultado1 <- t.test(c,d,var.equal = T)
+formatar_t_test(resultado1)
+
+## AVALIANDO O PODER DO EFEITO
+
+cohens_d(a,b)
