@@ -28,6 +28,24 @@ df %>%
   select_if(is.numeric | is.integer | is.character) %>% 
   Desc()
 
+# ---Seleção dos dados de texto---
+
+library(dplyr)
+
+glimpse(metabric)
+
+# Eu quero selecionar todas as variveis que sao chr (caracter, texto)
+metabric %>% select_if(
+  is.character
+) %>% glimpse()
+
+ ## ---Capturando o dado em um arquivo de texto---
+output <- metabric %>% select_if(
+  is.character
+) %>% map(table) %>% capture.output()
+
+writeLines(output,"niveis_variaveis_metabric.txt")
+
 #---Observações atípicas---
 ## São aquelas que uma combinação única de características identificáveis que as classifica como notavelmente diferente das outras observações.
 
