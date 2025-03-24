@@ -1,0 +1,34 @@
+
+
+# Criando a população
+set.seed(123)
+populacao = rexp(10000, 1/5)
+
+report::report_table(populacao)
+
+hist(populacao)
+
+# Definindo a quantidade de amostra e o n de cada amostra
+
+quantidade_de_amostras <- 50
+n_da_amostra <- 5
+
+# Fazendo a reamostragem
+
+media <- numeric(quantidade_de_amostras)
+
+for (i in 1:quantidade_de_amostras) {
+  amostra = sample(populacao, n_da_amostra, replace = T)
+  media[i] = mean(amostra)
+}
+
+# Avaliando a ditribuição
+par(mfrow = c(1,2))
+
+hist(media, main = paste('Número de amostra =',n_da_amostra))
+qqnorm(media)
+qqline(media)
+
+# Fazendo o teste de normalidade
+shapiro.test(media)
+
