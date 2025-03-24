@@ -1,0 +1,27 @@
+set.seed(123)  # Para reprodutibilidade
+
+# Gerando vetores de diferentes distribuições
+normal <- rnorm(100, mean = 50, sd = 10)
+exponencial <- rexp(100, rate = 1/50)
+gama <- rgamma(100, shape = 2, scale = 10)
+poisson <- rpois(100, lambda = 20)
+
+# Criando o data frame com cada distribuição em uma coluna
+dados <- data.frame(
+  normal = normal,
+  exponencial = exponencial,
+  bimodal = bimodal,
+  gama = gama,
+  poisson = poisson
+)
+
+# Visualizando o início do data frame
+head(dados)
+
+par(mfrow = c(2,2))
+hist(normal)
+hist(poisson)
+hist(gama)
+hist(exponencial)
+
+write.csv(dados, file = 'dados_simulados.csv')
