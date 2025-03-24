@@ -1,0 +1,56 @@
+# Instale se ainda não tiver
+# install.packages("shiny")
+
+library(shiny)
+
+# Dados originais fixos
+df <- data.frame(
+  valor = c(4.2, 3.8, 5.1, 6.0, 4.5, 6.2),
+  grupo = c(1, 1, 1, 2, 2, 2)
+)
+
+# UI
+ui <- fluidPage(
+  titlePanel("Visualizando Bootstrap passo a passo"),
+  sidebarLayout(
+    sidebarPanel(
+      actionButton("go", "Sortear nova amostra bootstrap")
+    ),
+    mainPanel(
+      h4("Data frame original:"),
+      tableOutput("original"),
+      
+      h4("Índices sorteados:"),
+      verbatimTextOutput("indices"),
+      
+      h4("Nova amostra (d):"),
+      tableOutput("dframe"),
+      
+      h4("Diferença de medianas (grupo 2 - grupo 1):"),
+      verbatimTextOutput("resultado")
+    )
+  )
+)
+
+# Server
+server <- function(input, output) {
+  
+  output$original <- renderTable({
+    df
+  })
+  
+  observeEvent(input$go, {
+    indices <- sample(1:nrow(df), size = nrow(df), replace = TRUE)
+    d <- df[indices, ]
+    med1 <- median(d[d$grupo == 1, "valor"])
+    med2 <- median(d[d$grupo == 2, "valor"])
+    diff <- med2 - med1
+    
+    output$indices <- renderPrint({ indices })
+    output$dframe <- renderTable({ d })
+    output$resultado <- renderPrint({ diff })
+  })
+}
+
+# Rodar app
+shinyApp(ui = ui, server = server)
