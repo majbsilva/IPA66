@@ -3,24 +3,31 @@
 
 library(shiny)
 
-# Dados originais fixos
-df <- data.frame(
-  valor = c(4.2, 3.8, 5.1, 6.0, 4.5, 6.2),
-  grupo = c(1, 1, 1, 2, 2, 2)
-)
+# Função para gerar dados originais com n amostras por grupo
+generate_data <- function(n_per_group) {
+  data.frame(
+    valor = c(rnorm(n_per_group, mean = 4.5, sd = 0.5), rnorm(n_per_group, mean = 5.5, sd = 0.5)),
+    grupo = rep(1:2, each = n_per_group)
+  )
+}
 
 # UI
 ui <- fluidPage(
   titlePanel("Visualizando Bootstrap passo a passo"),
   sidebarLayout(
     sidebarPanel(
-      actionButton("go", "Sortear nova amostra bootstrap")
+      actionButton("go", "Sortear nova amostra bootstrap"),
+      numericInput("num_samples", "Número de amostras de bootstrap:", value = 100, min = 1),
+      numericInput("n_per_group", "Número de amostras por grupo:", value = 3, min = 1)
     ),
     mainPanel(
+      h4("Histograma das diferenças de medianas:"),
+      plotOutput("histograma"),
+      
       h4("Data frame original:"),
       tableOutput("original"),
       
-      h4("Índices sorteados:"),
+      h4("Índices sorteados (última amostra):"),
       verbatimTextOutput("indices"),
       
       h4("Nova amostra (d):"),
@@ -35,20 +42,41 @@ ui <- fluidPage(
 # Server
 server <- function(input, output) {
   
+  # Vetor para armazenar as diferenças de mediana
+  diffs <- reactiveVal(c())
+  
+  # Gerar dados originais com base no número de amostras por grupo
+  df <- reactive({
+    generate_data(input$n_per_group)
+  })
+  
   output$original <- renderTable({
-    df
+    df()
   })
   
   observeEvent(input$go, {
-    indices <- sample(1:nrow(df), size = nrow(df), replace = TRUE)
-    d <- df[indices, ]
-    med1 <- median(d[d$grupo == 1, "valor"])
-    med2 <- median(d[d$grupo == 2, "valor"])
-    diff <- med2 - med1
+    num_samples <- input$num_samples
+    new_diffs <- numeric(num_samples)
+    
+    for (i in 1:num_samples) {
+      indices <- sample(1:nrow(df()), size = nrow(df()), replace = TRUE)
+      d <- df()[indices, ]
+      med1 <- median(d[d$grupo == 1, "valor"])
+      med2 <- median(d[d$grupo == 2, "valor"])
+      new_diffs[i] <- med2 - med1
+    }
+    
+    # Adicionar as novas diferenças ao vetor
+    diffs(c(diffs(), new_diffs))
     
     output$indices <- renderPrint({ indices })
     output$dframe <- renderTable({ d })
-    output$resultado <- renderPrint({ diff })
+    output$resultado <- renderPrint({ new_diffs[num_samples] })
+  })
+  
+  output$histograma <- renderPlot({
+    hist(diffs(), breaks = 20, main = "Histograma das Diferenças de Medianas",
+         xlab = "Diferença de Medianas", col = "lightblue")
   })
 }
 
