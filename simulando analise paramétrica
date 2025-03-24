@@ -1,0 +1,14 @@
+set.seed(123)
+a <- rnorm(50,4,0.4)
+b <- a * 1.2 + rnorm(50,0.8,0.1)
+
+diferença <- b - a
+
+par(mfrow = c(1,2))
+hist(diferença)
+qqnorm(diferença)
+qqline(diferença)
+
+shapiro.test(diferença)
+
+report::report_table(diferença)
