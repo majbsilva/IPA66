@@ -1,1 +1,71 @@
 
+# Definição dos grupos e criação da tabela
+grupo_1 <- rexp(100,1/7)
+grupo_2 <- rexp(100,1/5)
+valor <- c(grupo_1,grupo_2)
+tratamento <- rep(c('Controle', 'Tratado'), each = 50)
+dados <- data.frame(valor,tratamento)
+
+# Avaliando as características dos grupos.
+
+## Visualização da estatistica
+library(report)
+by(dados$valor,dados$tratamento,report_table)
+
+## Avaliar o histograma e qqplot de cada grupo
+
+par(mfrow = c(2,2))
+by(dados$valor,dados$tratamento,hist)
+by(dados$valor,dados$tratamento,qqnorm)
+
+## Analisando com o teste de normalidade
+
+by(dados$valor,dados$tratamento,shapiro.test)
+
+## Analisando o dado com o teste t e sua versão não-paramétrica
+library(dplyr)
+
+dados %>% group_by(tratamento) %>% 
+  summarise(
+    mean(valor)
+  )
+
+t.test(valor~tratamento,dados) 
+
+wilcox.test(valor~tratamento,dados)
+
+# Eu quero fazer uma análise que não considera a distribuição dos dados, nem pressupostos de homogeneidade. Além disso, não quero utilizar testes não-paramétricos porque os mesmos transformam o meu dado, mudando a natureza do mesmo. Portanto, posso fazer obter uma distribuição empírica com uma técnica de reamostragem com realocação (bootstrap) e com isso, obter alguns parâmetros dessa distribuição como desvio padrão e intervalo de confiança. 
+
+# REALIZANDO O BOOTSTRAP
+library(boot)
+
+## Definindo a condição de reamotragem e diferença entre grupos
+median_diff <- function(data,indice){
+  d = data[indice,]
+  med1 = median(d[d$tratamento =='Controle','valor'])
+  med2 = median(d[d$tratamento =='Tratado','valor'])
+  diff = med1 - med2
+}
+## Realizando a reamostragem com realocaçao
+resultado <- boot(data = dados, statistic = median_diff,R = 5000)
+
+length(resultado$t)
+
+## Avaliando a distribuiçao e a estatistica da minha reamostragem
+
+### Estatistica descritiva da minha distriução empírica criada pelo bootstrap
+
+report_table(resultado$t)
+
+### Avaliação visual da distriuição
+par(mfrow = c(1,2))
+
+hist(resultado$t)
+qqnorm(resultado$t)
+qqline(resultado$t, col = 'red', lwd = 2)
+shapiro.test(resultado$t)
+
+## E, o mais importante, obtendo o intervalo de confiança do resultado do bootstrap
+
+boot.ci(resultado, type = 'bca')
+
