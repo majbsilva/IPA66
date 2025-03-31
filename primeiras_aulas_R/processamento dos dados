@@ -37,6 +37,14 @@ sum(is.na(metabric_complete))
 
 metabric %>% filter(!is.na(Mutation.Count))
 
+#---Correção das classes de variáveis---
+
+#---Transformação das variáveis texto em categóricas---
+
+metabric <- metabric %>% mutate(
+  across(where(is.character),as.factor)
+)
+glimpse(metabric)
 
 #---Remoção de variáveis(colunas) que não serão utilizadas----
 
@@ -103,7 +111,15 @@ metabric <- metabric %>%
     Idade.no.Diagnóstico >= 70 ~ '70+'
   ))
 
-###---Renomeando níveis da variável categórica----
+###---Trabalhando com os níveis das variáveis categóricas===
+
+#### Identificando e olhando as frequências dos níveis das variáveis categóricas
+
+metabric %>%
+  select_if(is.character) %>%
+  map(fct_count)
+
+####---Renomeando níveis da variável categórica----
 
 níveis_renomeados_metabric <- metabric %>%
   mutate(`Estado vital do paciente` = recode(
@@ -112,6 +128,9 @@ níveis_renomeados_metabric <- metabric %>%
     `Died of Disease` = "Morto por Doença"
   ))
 table(níveis_renomeados_metabric$`Estado vital do paciente`)
+
+
+
 
 
 
