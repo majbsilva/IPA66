@@ -1,11 +1,12 @@
 
 #---Carregando os pacotes necessários----
 
-library(dplyr) # lidar com tabelas
-library(naniar) # lidar com valores ausentes
-library(report) # fazer tabelas estatísticas
-library(stringr) # lidar com textos, espacos, etc
-library(purrr) # função map
+library(dplyr) # manipulação e variáveis
+library(naniar) # trabalhar com missing data (NA - not annotated)
+library(report) # gerar tabelas descritivas (media, mediana, número de casos...)
+library(stringr) # trabalhar com variaveis texto para procurar espaços extras
+library(purrr) # uma função map.
+library(forcats) # manipulação de níveis de variáveis.
 
 #---Importanto o banco de dados----
 
