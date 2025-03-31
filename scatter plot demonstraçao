@@ -1,0 +1,22 @@
+library(foreign)
+ansiedade = read.csv2('/content/Exam Anxiety.csv')
+ansiedade$Anxiety = as.integer(ansiedade$Anxiety)
+str(ansiedade)
+
+x = rnorm(100,2,0.1)
+y = x*1.2 + rnorm(100,0,0.1)
+z = rnorm(100,0,1)
+sexo = rep(c("M","F"),50)
+length(sexo)
+ds = data.frame(x,y)
+
+ggplot(ansiedade,aes(x = Anxiety,y = Exam, color = Gender)) +
+  geom_point(aes(size = Revise)) +
+  geom_smooth(method = 'lm',se = F) +
+  theme_classic(base_size = 30) +
+  labs(
+  x = 'Tempo de revisão',
+  y = 'Nota do exame'
+  )
+
+  
