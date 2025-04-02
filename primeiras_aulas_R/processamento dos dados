@@ -88,6 +88,23 @@ metabric %>% filter(
 
 table(metabric$Radioterapia); table(metabric$Quimioterapia)
 
+#### ---Filtragem seguido da criação de uma tabela de frequência---
+metabric %>% filter(
+  Hormonioterapia == 'YES'
+) %>% select(ER.Status) %>% map(~prop.table(table(.))*100)
+
+metabric %>% filter(
+  Hormonioterapia == 'YES'
+) %>% 
+  select(ER.status.mensurado.por.IHC) %>% 
+  map(~prop.table(table(.))*100)
+
+metabric %>% filter(
+  Hormonioterapia == 'YES'
+) %>% 
+  select(ER.status.mensurado.por.IHC) %>% 
+  map(Desc)
+
 ###---Agrupamento e sumarização----
 
 cirurgia_idade_resumo <- metabric %>%
