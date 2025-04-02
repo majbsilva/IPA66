@@ -67,17 +67,11 @@ metabric <- metabric %>%
 
 paste(1:ncol(metabric),':',colnames(metabric)) %>% capture.output(file = 'nomes_colunas')
 
-##---Correção dos tipos de dados----
-
-metabric$Tumor.Size = as.numeric(metabric$Tumor.Size)
-metabric$Linfonodos.positivos.examinados = as.numeric(metabric$Linfonodos.positivos.examinados)
-
-
 ##---Transformação de dados----
 
 ###---Tratando variáveis de texto----
 
-metabric = metabric %>% mutate(across(where(is.character), str_trim))
+metabric = metabric %>% mutate(across(where(is.character), str_trim)) # remoção de espaços extras.
 head(metabric)
 
 ###---Filtragem----
@@ -94,9 +88,6 @@ metabric %>% filter(
 
 table(metabric$Radioterapia); table(metabric$Quimioterapia)
 
-recorrencia <- metabric %>%
-  filter(Recorrência == '1:Recurred')
-
 ###---Agrupamento e sumarização----
 
 cirurgia_idade_resumo <- metabric %>%
@@ -112,7 +103,7 @@ metabric <- metabric %>%
     Idade.no.Diagnóstico >= 70 ~ '70+'
   ))
 
-###---Trabalhando com os níveis das variáveis categóricas===
+###---Trabalhando com os níveis das variáveis categóricas---
 
 #### Identificando e olhando as frequências dos níveis das variáveis categóricas
 
@@ -122,7 +113,7 @@ metabric %>%
 
 ####---Renomeando níveis da variável categórica----
 
-níveis_renomeados_metabric <- metabric %>%
+metabric <- metabric %>%
   mutate(`Estado vital do paciente` = recode(
     Estado.vital.do.paciente,
     Living = "Vivo",
