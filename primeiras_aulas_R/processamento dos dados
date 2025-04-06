@@ -144,12 +144,18 @@ table(níveis_renomeados_metabric$`Estado vital do paciente`)
 
 library(rstatix)
 library(pastecs)
+library(DescTools)
 
-metabric %>% select_if(is.numeric) %>% Desc()
+metabric %>% select_if(is.numeric) %>% Desc() # Fazendo com a função Desc do DescTool.
 
-estat_desc  <-  metabric %>% select_if(is.numeric) %>% select(-n.,-status_num) %>% get_summary_stats() 
+estat_desc  <-  metabric %>% select_if(is.numeric) %>% select(-n.,-status_num) %>% get_summary_stats() # Fazendo com a função do get_summary_stats do rstatix.
 
-estat_desc  <-  metabric %>% select_if(is.numeric) %>% select(-n.,-status_num) %>% stat.desc(basic = F, norm = T) 
+estat_desc  <-  metabric %>% select_if(is.numeric) %>% select(-n.,-status_num) %>% stat.desc(basic = F, norm = T) # Fazendo com a função stat.desc do pastecs. Tem normalidade, assimetria e curtose.
+
+round(estat_desc,2) # função round para arrendondamento.
+
+capture.output(round(estat_desc,3),file = 'resultados/estatistica descritiva.txt')   
+
 
 ####---Visualização gráficos---
 
