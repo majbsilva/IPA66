@@ -138,6 +138,46 @@ metabric <- metabric %>%
   ))
 table(níveis_renomeados_metabric$`Estado vital do paciente`)
 
+###---Visualizando os dados---
+
+####---Estatística descritiva---
+
+library(rstatix)
+library(pastecs)
+
+metabric %>% select_if(is.numeric) %>% Desc()
+
+estat_desc  <-  metabric %>% select_if(is.numeric) %>% select(-n.,-status_num) %>% get_summary_stats() 
+
+estat_desc  <-  metabric %>% select_if(is.numeric) %>% select(-n.,-status_num) %>% stat.desc(basic = F, norm = T) 
+
+####---Visualização gráficos---
+
+library(ggpubr)
+
+ggboxplot(
+  metabric, x = 'Quimioterapia', y = 'Idade.no.Diagnóstico'
+)
+
+variáveis_x <- c('Quimioterapia', 'Hormonioterapia', 'Radioterapia', 'ER.Status', 'Estágio.do.tumor', 'Grupos.de.estadiamento')
+
+plot <- list()
+
+for (x_var in variáveis_x) {
+  p <- ggboxplot(
+    metabric,
+    x = x_var,
+    y = 'Idade.no.Diagnóstico',
+    outlier.shape = NA,
+    bxp.errorbar = T,
+    add = 'jitter'
+  )
+  plot[[x_var]] <- p
+}
+
+library(patchwork)
+multipli_plots <- wrap_plots(plot)
+
 
 
 
