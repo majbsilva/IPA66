@@ -1,0 +1,22 @@
+library(tidyverse)
+library(ggpubr)
+
+# Realizando o cálculo de Sturges e Rice para classes de bin
+## K = Raiz quadrada de n. Para n pequenos. 
+## Sturges K = 1 + 3.322*logn(base 10) n = número de individuos. Para amostras entre 30 e 200.
+## Rice K = 2n^(1/3). Para amostras acima de 200
+
+n = length(metabric$Idade.no.Diagnóstico)
+sturges <-ceiling(1 + 3.322*log10(n)) # ceiling é uma funçao que arredonda o número para cima.
+rice <- ceiling(2*n^(1/3))
+
+metabric %>% gghistogram(
+  x = "Idade.no.Diagnóstico",
+  add = 'mean',
+  bins = rice,
+  fill = 'red'
+) + 
+  geom_vline(
+    xintercept = median(metabric$Idade.no.Diagnóstico, na.rm = TRUE),
+    color = 'blue'
+  )
