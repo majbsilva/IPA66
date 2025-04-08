@@ -58,6 +58,10 @@ removido_colunas <- metabric %>%
 selecionado_colunas = metabric %>% select(c(4:8),12,14)
 glimpse(metabric)
 
+## Procurando mais variáveis para remover com a ferramenta Desc
+
+metabric %>% select_if(is.factor) %>% Desc()
+
 #---Renomear colunas----
 metabric <- metabric %>%
   rename(
@@ -74,6 +78,8 @@ paste(1:ncol(metabric),':',colnames(metabric)) %>% capture.output(file = 'nomes_
 metabric = metabric %>% mutate(across(where(is.character), str_trim)) # remoção de espaços extras.
 head(metabric)
 
+
+
 ###---Filtragem----
 
 selecionado = metabric %>% filter(
@@ -85,8 +91,16 @@ selecionado
 metabric %>% filter(
   Radioterapia == 'NO', Quimioterapia == 'NO',`Idade.no.Diagnóstico` > 60
 ) %>% nrow
-
 table(metabric$Radioterapia); table(metabric$Quimioterapia)
+
+metabric %>% filter(
+  Hormonioterapia == 'YES',
+  Estado.menopausal.inferido == 'Post',
+  Idade.no.Diagnóstico > 50,
+  Grau.histológico %in% c(1,2,3)
+)
+
+
 
 #### ---Filtragem seguido da criação de uma tabela de frequência---
 metabric %>% filter(
@@ -111,14 +125,23 @@ cirurgia_idade_resumo <- metabric %>%
   group_by(Tipo.de.cirurgia.da.mama) %>%
   summarise(`Média Idade` = mean(Idade.no.Diagnóstico, na.rm = TRUE))
 
-###----Criação de novas variáveis----
-metabric <- metabric %>%
-  mutate(`Faixa Etária Detalhada` = case_when(
-    Idade.no.Diagnóstico < 40 ~ '<40',
-    Idade.no.Diagnóstico >= 40 & Idade.no.Diagnóstico <= 59 ~ '40-59',
-    Idade.no.Diagnóstico >= 60 & Idade.no.Diagnóstico <= 69 ~ '60-69',
-    Idade.no.Diagnóstico >= 70 ~ '70+'
-  ))
+###----Criação de novas variáveis ou alteração----
+
+metabric <-  metabric %>% mutate(
+  Nottingham.prognostic.index = if_else(
+    Nottingham.prognostic.index > 1000,
+    Nottingham.prognostic.index / 1000,
+    Nottingham.prognostic.index
+  )
+) 
+
+metabric %>% mutate(NPI_risk = case_when(
+  Nottingham.prognostic.index <= 2.4 ~ 'excelente',
+  Nottingham.prognostic.index > 2.4 & Nottingham.prognostic.index <3.4 ~ 'bom',
+  Nottingham.prognostic.index >= 3.4 & Nottingham.prognostic.index <5.4 ~ 'moderado',
+  Nottingham.prognostic.index >=5.4 ~ 'ruim'
+)
+) %>% glimpse()
 
 ###---Trabalhando com os níveis das variáveis categóricas---
 
