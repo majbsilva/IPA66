@@ -119,13 +119,17 @@ metabric %>% filter(
   select(ER.status.mensurado.por.IHC) %>% 
   map(Desc)
 
-###---Agrupamento e sumarização----
 
-cirurgia_idade_resumo <- metabric %>%
-  group_by(Tipo.de.cirurgia.da.mama) %>%
-  summarise(`Média Idade` = mean(Idade.no.Diagnóstico, na.rm = TRUE))
 
 ###----Criação de novas variáveis ou alteração----
+
+metabric <-  metabric %>% mutate(
+  Nottingham.prognostic.index = if_else(
+    Nottingham.prognostic.index > 1000,
+    Nottingham.prognostic.index / 1000,
+    Nottingham.prognostic.index
+  )
+) 
 
 metabric <-  metabric %>% mutate(
   Nottingham.prognostic.index = if_else(
@@ -153,15 +157,46 @@ metabric %>%
 
 ####---Renomeando níveis da variável categórica----
 
-metabric <- metabric %>%
-  mutate(`Estado vital do paciente` = recode(
-    Estado.vital.do.paciente,
-    Living = "Vivo",
-    `Died of Disease` = "Morto por Doença"
-  ))
-table(níveis_renomeados_metabric$`Estado vital do paciente`)
+metabric %>% mutate(
+  Status.geral.de.sobrevivência = recode(
+    Status.geral.de.sobrevivência,
+    `0:LIVING` = 'Living',
+    `1:DECEASED` = 'Deceased'
+  )
+) %>% glimpse()
 
 ###---Visualizando os dados---
+
+####---Agrupamento e sumarização----
+
+idade_cirurgia <- metabric %>% group_by(Tipo.de.cirurgia.da.mama, HER2.Status) %>% 
+  summarise(media = mean(Idade.no.Diagnóstico, na.rm = T),
+            `desvio padrão` = sd(Idade.no.Diagnóstico, na.rm = T),
+            mediana = median(Idade.no.Diagnóstico, na.rm = T)
+            )
+
+library(gt)
+
+gt_idade_cirurgia <-  idade_cirurgia %>% gt() %>% 
+  tab_header(
+    title = 'Idade no diagnóstico por tipo de cirurgia e status HER2',
+  ) %>% 
+  fmt_number(
+    columns = c(media, `desvio padrão`, mediana)
+  ) %>% 
+  cols_label(
+    Tipo.de.cirurgia.da.mama = 'Tipo de cirurgia',
+    HER2.Status = 'Status HER2',
+    media = 'Média',
+    `desvio padrão`= 'Desvio padrão',
+    mediana = 'Mediana'
+  ) %>%
+  tab_options(
+    table.font.size = "small",
+    data_row.padding = px(5)
+  )
+
+gtsave(gt_idade_cirurgia, 'idade cirurgia.tex')
 
 ####---Estatística descritiva---
 
