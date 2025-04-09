@@ -58,6 +58,8 @@ removido_colunas <- metabric %>%
 selecionado_colunas = metabric %>% select(c(4:8),12,14)
 glimpse(metabric)
 
+
+
 ## Procurando mais variáveis para remover com a ferramenta Desc
 
 metabric %>% select_if(is.factor) %>% Desc()
