@@ -3,7 +3,7 @@
 library(tidyverse)
 library(naniar)
 
-# Importar o banco de dados
+# Importar o banco de dados. Vocês utilizaram o banco de dados chamado starwars. Só digitar o comando abaixo. Não esqueça de carregar antes os pacotes acima.
 
 dados <- starwars
 
