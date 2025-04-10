@@ -1,0 +1,64 @@
+
+# Carregar os pacotes
+library(tidyverse)
+library(naniar)
+
+# Importar o banco de dados
+
+dados <- starwars
+
+# Capturar o glimpse em um arquivo de texto
+
+# Verificar se existem nomes repetidos utilizando a função distinct e veja se o número de observações mudou após aplicar a função
+
+dados %>% distinct(name,keep_all = T) %>% nrow()
+
+# Faça a inspeção inicial dos dados com a função glimpse
+
+# Faça uma captura dos níveis presentes nas variáveis da classe texto (chr) para um arquivo de texto utilizando o select_if, a função map(unique) e o capture.output.
+
+dados %>% select_if(is.character) %>% map(unique) %>%  capture.output(file = 'resultados/classes starwars.txt')
+
+# Carregue o pacote naniar e veja quais variáveis possuem NAs. Use a funçao miss_var_summary
+
+dados %>% miss_var_summary()
+
+# Faça um gráfico que mostre os valores NAs com a função gg_miss_var do pacote naniar.
+
+dados %>% gg_miss_var()
+
+# Faça uma atribuição ao grafico que acabou de criar.
+
+# Remova as variáveis films and vehicles do banco de dados utilizando a função select do dplyr. Não esqueça de fazer a atribuição. 
+
+dados <- dados %>% select(-films,-vehicles)
+
+# Quantas variáveis o seu banco de dados possui agora?
+
+# Transforme todas as variáveis que são texto (chr) em fatores (categóricas). Não esqueça de fazer a atribuição. Só faça a atribuição após checar que o seu comando deu certo. 
+
+dados %>% mutate(
+  across(
+    where(is.character),as.factor
+  )
+) 
+
+# Quais são os níveis ou categorias da variável eye_color?
+
+# Quantos níveis ou categorias tem a variável skin_color?
+
+# Utilizando a filtragem (função filter), qual é o nome, sexo, especie e seu mundo de origem do(s) personagem(ns) que tem mais de 1,90 de altura e tem cabelo preto?
+
+dados %>% filter(height > 190, hair_color == 'black') %>% glimpse()
+
+# Qual é a proporção entre masculino e feminino da variável gender?
+
+dados %>% select(gender) %>% map(~prop.table(table(.)))
+
+# Qual é a proporção entre masculino e feminino,variável gender, entre indivíduos do planeta Tatooine? Utilize as funções filter e select.
+
+dados %>% filter(homeworld == 'Tatooine') %>%  select(gender) %>% map(~prop.table(table(.)))
+
+
+
+
