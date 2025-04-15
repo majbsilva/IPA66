@@ -27,6 +27,24 @@ paste(1:ncol(metabric),':',colnames(metabric)) %>% capture.output(file = 'nomes_
 
 metabric %>% select_if(is.character) %>% map(table) %>% capture.output(file = 'rótulos variáveis.txt')
 
+fosp_clean <- fosp %>% remove_empty('cols') %>% 
+  remove_empty('rows') %>% 
+  remove_constant()
+
+compare_df_cols(fosp,fosp_clean)
+
+setdiff(names(fosp), names(fosp_clean))  # colunas que estão em df1, mas não em df2
+setdiff(names(fosp_clean), names(fosp))  # colunas que estão em df2, mas não em df1
+
+variaveis <- list(
+  "LOCALTNM", "IDMITOTIC", "PSA", "GLEASON", "TRATFANTES", "CIRURANT",
+  "RADIOANT", "QUIMIOANT", "HORMOANT", "TMOANT",
+  "IMUNOANT", "OUTROANT", "TMOAPOS", "IMUNOAPOS", "ANODIAG", "ERRO"
+)
+
+lapply(variaveis, function(x){
+  unique(fosp[[x]])
+})
 
 #---Tratamento, análise e verificação dos valores ausentes----
 
