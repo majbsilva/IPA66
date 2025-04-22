@@ -1,1 +1,39 @@
 
+# Range----
+## É a diferença entre o máxmio e minimo.
+
+max(metabric$Idade.no.Diagnóstico)
+min(metabric$Idade.no.Diagnóstico)
+
+range(metabric$Idade.no.Diagnóstico)
+
+# IQR----
+## É um tipo de range, mas ele calcula a diferença entre o 25th e o 75th quantile. 
+
+quantile(metabric$Idade.no.Diagnóstico,0.25)
+quantile(metabric$Idade.no.Diagnóstico,0.75)
+IQR(metabric$Idade.no.Diagnóstico)
+
+# Mean absolute deviation (desvio absoluto da média)----
+
+media <- mean(metabric$Idade.no.Diagnóstico)
+desvio_absoluto <- abs(metabric$Idade.no.Diagnóstico - media)
+media_desvio_absoluto <- mean(desvio_absoluto)
+media_desvio_absoluto
+
+# Median absolute deviation----
+mad(metabric$Idade.no.Diagnóstico)
+
+# Variance ou variância ----
+## É o quadrado do desvio absoluto.
+
+mean((metabric$Idade.no.Diagnóstico - media)^2)
+var(metabric$Idade.no.Diagnóstico)
+
+# Desvio padrão----
+sqrt(var(metabric$Idade.no.Diagnóstico))
+sd(metabric$Idade.no.Diagnóstico)
+
+
+
+
