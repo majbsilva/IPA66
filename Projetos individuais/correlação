@@ -1,1 +1,24 @@
+library(ggplot2)
+
+a <- rnorm(100,5,0.4)
+b <- a*0.11 + rnorm(100, 0.8, 0.002)
+
+ds <- data.frame(
+  a = a,
+  b = b
+)
+
+ggplot(ds, aes(a)) + 
+  geom_histogram()
+
+ggplot(ds, aes(b)) + 
+  geom_histogram()
+
+ggplot(ds, aes(a,b)) + 
+  geom_point()
+
+cor(a,b, method = 'pearson')
+cor(a,b, method = 'spearman')
+
+rstatix::cor_test(ds)
 
