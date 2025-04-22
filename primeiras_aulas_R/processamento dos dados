@@ -77,7 +77,6 @@ selecionado_colunas = metabric %>% select(c(4:8),12,14)
 glimpse(metabric)
 
 
-
 ## Procurando mais variáveis para remover com a ferramenta Desc
 
 metabric %>% select_if(is.factor) %>% Desc()
@@ -97,7 +96,6 @@ paste(1:ncol(metabric),':',colnames(metabric)) %>% capture.output(file = 'nomes_
 
 metabric = metabric %>% mutate(across(where(is.character), str_trim)) # remoção de espaços extras.
 head(metabric)
-
 
 
 ###---Filtragem----
@@ -142,14 +140,6 @@ metabric %>% filter(
 
 
 ###----Criação de novas variáveis ou alteração----
-
-metabric <-  metabric %>% mutate(
-  Nottingham.prognostic.index = if_else(
-    Nottingham.prognostic.index > 1000,
-    Nottingham.prognostic.index / 1000,
-    Nottingham.prognostic.index
-  )
-) 
 
 metabric <-  metabric %>% mutate(
   Nottingham.prognostic.index = if_else(
