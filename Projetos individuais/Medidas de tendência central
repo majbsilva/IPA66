@@ -1,1 +1,11 @@
+# Média, mediana e moda----
 
+## É uma forma de representar a tendência central dos dados. A média é robusta  em dados que não possuem valores extremos. A mediana representa melhor dados que possuem valores extremos. A moda representa o dado que mais se repete.
+
+## Trimmed mean ou média aparada
+## Ela é utilizada em dados com valores extremos. Ela retira uma determinada % dos valores extremos tanto mais alto quanto mais baixo. 
+
+media_aparada <- mean(metabric$Idade.no.Diagnóstico, trim = 0.1) # Nesse caso, estou aparando 10% dos extremos.
+media_aparada
+
+moda <- table(metabric$Linfonodos.positivos.examinados)
