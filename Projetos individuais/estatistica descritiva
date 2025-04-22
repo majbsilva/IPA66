@@ -1,1 +1,14 @@
+library(dplyr)
+library(rstatix)
+library(pastecs)
 
+# Sumarização dos dados numéricos
+metabric %>% select_if(is.numeric) %>% summary()
+
+metabric %>% select_if(is.numeric) %>% get_summary_stats()
+
+metabric %>% select_if(is.numeric) %>% stat.desc(norm = T)
+
+# Sumarização dos dados numéricos por grupos
+
+sumarizacao <- metabric %>%  group_by(Grupos.etários) %>% select_if(is.numeric)  %>%  get_summary_stats() %>% print(n = 33)
