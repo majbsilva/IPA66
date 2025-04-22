@@ -8,8 +8,9 @@ ds <- data.frame(
   b = b
 )
 
-ggplot(ds, aes(a)) + 
-  geom_histogram()
+ggplot(ds, aes(b)) + 
+  geom_histogram(fill = 'blue', color = 'white') +
+  geom_vline(xintercept = mean(b),color = 'yellow', linetype = 'dashed', size = 1)
 
 ggplot(ds, aes(b)) + 
   geom_histogram()
