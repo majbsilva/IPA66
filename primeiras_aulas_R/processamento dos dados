@@ -137,8 +137,6 @@ metabric %>% filter(
   select(ER.status.mensurado.por.IHC) %>% 
   map(Desc)
 
-
-
 ###----Criação de novas variáveis ou alteração----
 
 metabric <-  metabric %>% mutate(
