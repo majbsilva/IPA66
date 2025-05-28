@@ -1,1 +1,95 @@
+# Carregando os pacotes necessários
+library(tidyverse)
+library(flextable)
+library(officer) # para usar a função fp_border
+library(rstatix) # para usar a função stat.desc
+
+# Lendo o dataset
+metabric <- read.csv('data/metabric.csv')
+
+#==============================
+# 1. AGRUPAMENTO E SUMARIZAÇÃO
+#==============================
+idade_cirurgia <- metabric %>% 
+  group_by(Tipo.de.cirurgia.da.mama, HER2.Status) %>% 
+  summarise(
+    media = mean(Idade.no.Diagnóstico, na.rm = TRUE),
+    `desvio padrão` = sd(Idade.no.Diagnóstico, na.rm = TRUE),
+    mediana = median(Idade.no.Diagnóstico, na.rm = TRUE)
+  )
+
+#==============================
+# 2. CONSTRUÇÃO VISUAL DA TABELA PASSO A PASSO
+#==============================
+
+# Passo 1: Criando a tabela básica
+flextable(idade_cirurgia)
+
+# Passo 2: Formatando números com 3 casas decimais
+ft %>%  colformat_double(digits = 3)
+ 
+
+# Passo 3: Renomeando os rótulos do cabeçalho
+ft %>% 
+   colformat_double(digits = 3)
+  set_header_labels(
+    Tipo.de.cirurgia.da.mama = 'Tipo de cirurgia',
+    HER2.Status = 'HER2 status',
+    media = 'Média',
+    `desvio padrão` = 'Desvio padrão',
+    mediana = 'Mediana'
+  )
+
+# Passo 4: Ajustando fonte, negrito e alinhamento
+ft <- ft %>% 
+  colformat_double(digits = 3)
+set_header_labels(
+  Tipo.de.cirurgia.da.mama = 'Tipo de cirurgia',
+  HER2.Status = 'HER2 status',
+  media = 'Média',
+  `desvio padrão` = 'Desvio padrão',
+  mediana = 'Mediana'
+)
+  fontsize(size = 12, part = "all") %>% 
+  bold(part = "header") %>% 
+  align(align = "center", part = "all")
+
+  # Passo 5: Cores no cabeçalho e bordas da tabela
+  ft <- ft %>% 
+    color(part = "header", color = "black") %>% 
+    bg(part = "header", bg = "lightgray") %>% 
+    border(border = fp_border(color = "black", width = 1), part = "all") %>% 
+    border(border = fp_border(color = "black", width = 1.5), part = "header")
+  
+  # Passo 6: Ajustando layout geral da tabela
+  ft <- ft %>% 
+    set_table_properties(width = 0.5, layout = "autofit") %>% 
+    set_caption("Estatísticas descritivas da idade no diagnóstico")
+
+#==============================
+# 3. OPÇÕES DE TEMAS VISUAIS
+#==============================
+
+# Exemplos de temas que podem ser aplicados à tabela final
+theme_booktabs(ft)    # Clássico, limpo
+theme_vanilla(ft)     # Minimalista
+theme_alafoli(ft)     # Cores suaves
+theme_tron(ft)        # Estilo moderno
+theme_zebra(ft)       # Linhas alternadas
+theme_box(ft)         # Com caixa delimitadora
+theme_vader(ft)       # Fundo escuro
+
+#==============================
+# 4. FAZENDO DE UMA OUTRA FORMA
+#==============================
+
+variavel_quantitativa <- metabric %>% 
+  select(Idade.no.Diagnóstico, Linfonodos.positivos.examinados, Overall.Survival..Months.)
+
+estat_desc <- get_summary_stats(variavel_quantitativa) %>% 
+  select(n,mean,iqr,sd)
+
+flextable(estat_desc)
+
+
 
