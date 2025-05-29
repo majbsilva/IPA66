@@ -13,7 +13,7 @@ metabric <- read.csv('data/metabric.csv')
 idade_radioterapia <- metabric %>% 
   group_by(Radioterapia, HER2.Status) %>% 
   summarise(
-    media = mean(Idade.no.Diagnóstico, na.rm = T),
+    media = mean(Idade.no.Diagnóstico,  na.rm = T),
     desvio_padrao = sd(Idade.no.Diagnóstico, na.rm = T),
     mediana = median(Idade.no.Diagnóstico, na.rm = T)
   )
@@ -36,7 +36,7 @@ ft %>%
     Tipo.de.cirurgia.da.mama = 'Tipo de cirurgia',
     HER2.Status = 'HER2 status',
     media = 'Média',
-    `desvio padrão` = 'Desvio padrão',
+    desvio_padrao = 'Desvio padrão',
     mediana = 'Mediana'
   )
 
