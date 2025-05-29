@@ -10,12 +10,12 @@ metabric <- read.csv('data/metabric.csv')
 #==============================
 # 1. AGRUPAMENTO E SUMARIZAÇÃO
 #==============================
-idade_cirurgia <- metabric %>% 
-  group_by(Tipo.de.cirurgia.da.mama, HER2.Status) %>% 
+idade_radioterapia <- metabric %>% 
+  group_by(Radioterapia, HER2.Status) %>% 
   summarise(
-    media = mean(Idade.no.Diagnóstico, na.rm = TRUE),
-    `desvio padrão` = sd(Idade.no.Diagnóstico, na.rm = TRUE),
-    mediana = median(Idade.no.Diagnóstico, na.rm = TRUE)
+    media = mean(Idade.no.Diagnóstico, na.rm = T),
+    desvio_padrao = sd(Idade.no.Diagnóstico, na.rm = T),
+    mediana = median(Idade.no.Diagnóstico, na.rm = T)
   )
 
 #==============================
