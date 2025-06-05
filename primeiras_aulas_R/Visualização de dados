@@ -1,7 +1,7 @@
 #===============================
 # 📦 Carregando os pacotes
 #===============================
-library(tidyverse)
+library(tidyverse) # o ggplot esta dentro do tidyverse
 
 #===============================
 # 📁 Lendo o dataset
@@ -11,76 +11,80 @@ metabric <- read.csv('data/metabric.csv')
 #===============================
 # 1. GRÁFICO DE DISPERSÃO BÁSICO
 #===============================
-metabric %>%
-  ggplot(aes(x = Idade.no.Diagnóstico, y = Overall.Survival..Months.)) +
+## Aesthitics --> o mapeamento do que eu vou plotar
+metabric %>% 
+  ggplot(aes(x=Idade.no.Diagnóstico,y=Overall.Survival..Months.)) +
   geom_point()
 
 #===============================
 # 2. AJUSTANDO TAMANHO E COR FIXA
 #===============================
-metabric %>%
-  ggplot(aes(x = Idade.no.Diagnóstico, y = Overall.Survival..Months.)) +
-  geom_point(size = 2, color = 'red')
+metabric %>% 
+  ggplot(aes(x=Idade.no.Diagnóstico,y=Overall.Survival..Months.)) +
+  geom_point(size = 2, color = 'tomato4')
 
 #===============================================
 # 3. COLORINDO POR GRUPO: QUIMIOTERAPIA (CATEGÓRICO)
 #===============================================
-metabric %>%
-  ggplot(aes(x = Idade.no.Diagnóstico, y = Overall.Survival..Months.)) +
-  geom_point(aes(colour = Quimioterapia))
+metabric %>% 
+  ggplot(aes(x=Idade.no.Diagnóstico,y=Overall.Survival..Months.)) +
+  geom_point(aes(colour = Quimioterapia), size = 1.5)
 
 #===============================================================
 # 4. COLORINDO POR QUIMIOTERAPIA + TAMANHO PELO Nº DE LINFONODOS
 #===============================================================
-metabric %>%
-  ggplot(aes(x = Idade.no.Diagnóstico, y = Overall.Survival..Months.)) +
+
+metabric %>% 
+  ggplot(aes(x=Idade.no.Diagnóstico,y=Overall.Survival..Months.)) +
   geom_point(aes(colour = Quimioterapia, size = Linfonodos.positivos.examinados))
+
 
 #===========================================
 # 5. ADICIONANDO RÓTULOS E TEMA MAIS LIMPO
 #===========================================
-metabric %>%
-  ggplot(aes(x = Idade.no.Diagnóstico, y = Overall.Survival..Months.)) +
+
+metabric %>% 
+  ggplot(aes(x=Idade.no.Diagnóstico,y=Overall.Survival..Months.)) +
   geom_point(aes(colour = Quimioterapia, size = Linfonodos.positivos.examinados)) +
   labs(
-    x = "Idade no diagnóstico",
-    y = "Sobrevida geral (meses)",
-    size = "Linfonodos positivos"
-  ) +
+    x = 'Idade no diagnóstico',
+    y = 'Sobrevivência geral (meses)',
+    size = 'Linfonodos positivos'
+  ) + 
   theme_classic() +
   theme(
-    legend.position = "top"
+    legend.position = 'top'
   )
 
 #===========================================
 # 6. CRIANDO OBJETO 'p' COM ESTILO DEFINIDO
 #===========================================
-p <- metabric %>%
-  ggplot(aes(x = Idade.no.Diagnóstico, y = Overall.Survival..Months.)) +
+
+grafico <- metabric %>% 
+  ggplot(aes(x=Idade.no.Diagnóstico,y=Overall.Survival..Months.)) +
   geom_point(aes(colour = Quimioterapia, size = Linfonodos.positivos.examinados)) +
   labs(
-    x = "Idade no diagnóstico",
-    y = "Sobrevida geral (meses)",
-    size = "Linfonodos positivos"
-  ) +
+    x = 'Idade no diagnóstico',
+    y = 'Sobrevivência geral (meses)',
+    size = 'Linfonodos positivos'
+  ) + 
   theme_classic() +
   theme(
-    legend.position = "top",
-    axis.title.x = element_text(size = 14, color = "black"),
-    axis.title.y = element_text(size = 14),
+    legend.position = 'top',
+    axis.title.x = element_text(size = 14, color = 'black'),
+    axis.title.y = element_text(size = 14, color = 'black'),
     axis.text.x = element_text(size = 14),
     axis.text.y = element_text(size = 14)
   )
-
 #===============================================
 # 7. SUBDIVISÃO POR STATUS DO RECEPTOR DE ESTROGÊNIO (ER)
 #===============================================
-p + facet_wrap(~ER.Status)
 
+grafico + facet_wrap(~ER.Status)
 #=========================================
 # 8. FACETANDO POR ER E HER2 SIMULTANEAMENTE
 #=========================================
-p + facet_grid(ER.Status ~ HER2.Status)
+grafico + facet_wrap(ER.Status ~ HER2.Status)
 
 #===============================
 # 9. BOXPLOT PARA COMPARAÇÕES
