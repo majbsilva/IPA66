@@ -9,9 +9,10 @@ library(tidyverse)      # Conjunto de pacotes para manipulação e visualizaçã
 
 # CARREGAR DADOS ############################################
 
+?iris
 head(iris)              # Primeiras linhas do dataset
 glimpse(iris)           # Visão geral das variáveis
-datasummary_skim(iris)  # Estatísticas descritivas resumidas
+datasummary_skim(iris)  # Estatísticas descritivas resumidas de dentro do pacote modelsummary
 
 # PLOTAGEM BÁSICA COM plot() ################################
 
@@ -21,24 +22,39 @@ datasummary_skim(iris)  # Estatísticas descritivas resumidas
 plot(iris$Species)
 
 # Variável quantitativa
+plot(iris$Sepal.Length)
 plot(iris$Petal.Length)
+plot(iris$Sepal.Width)
 
 # Categórica × Quantitativa
-plot(iris$Species, iris$Petal.Width)
+plot(x,y)
+plot(iris$Species,iris$Sepal.Length)
+plot(iris$Species,iris$Petal.Length)
+
 
 # Quantitativas em par
-plot(iris$Petal.Length, iris$Petal.Width)
+## Será que quanto maior é o teamnho da sepala, maior é o tamanho da pétala? Vou tentar responder com um gráfico de dispersao (scatter plot)
+#plot(x,y)
+plot(iris$Sepal.Length, iris$Petal.Length)
+# Será que a largura da sépala é proporcional à largura da pétala?
+plot(iris$Sepal.Width,iris$Petal.Width)
+
+# PARA CASA Será que a largura da sépala é proporcional com o tamanho da sépala?
+# PARA CASA Será que a largura da pétala é proporcional com o tamanho da pétala?
+
 
 # Todo o data frame (pares de variáveis)
 plot(iris)
 
 # Plotagem com opções
-plot(iris$Petal.Length, iris$Petal.Width,
-     col = "#cc0000",     # Cor vermelha (hex)
-     pch = 19,            # Pontos preenchidos
-     main = "Iris: Comprimento vs. Largura da Pétala",
-     xlab = "Comprimento da Pétala",
-     ylab = "Largura da Pétala")
+plot(
+        iris$Sepal.Length, iris$Petal.Length,
+        col = 'turquoise1',
+        pch = 19,
+        main = 'Comprimento: sépala versus pétala',
+        xlab = 'Comprimento da sépala',  # eixo tem um rótulo (label)
+        ylab = 'Comprimento da pétala'  # eixo tem um rótulo (label)
+)
 
 # PLOTAGEM DE FUNÇÕES #######################################
 
@@ -54,4 +70,3 @@ plot(dnorm, -3, +3,
      main = "Distribuição Normal Padrão",
      xlab = "Escores-z",
      ylab = "Densidade")
-
