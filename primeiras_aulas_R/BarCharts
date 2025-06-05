@@ -1,1 +1,35 @@
+# Arquivo: BarCharts.R
+# Curso: R - Uma Introdução (com RStudio)
+
+# CARREGAR PACOTES ##########################################
+
+library(datasets)  # Pacotes base com conjuntos de dados
+
+# CARREGAR DADOS ############################################
+
+?iris           # Ajuda sobre o conjunto de dados iris
+head(iris)      # Visualizar as primeiras linhas
+
+# GRÁFICOS DE BARRAS ########################################
+
+# Tentativa incorreta de gráfico de barras com variável contínua
+barplot(iris$Sepal.Length)  # Não funciona corretamente
+
+# Criar tabela de frequências para variável contínua
+frequencias <- table(iris$Sepal.Length)
+
+# Gráfico de barras com contagem
+barplot(frequencias,
+        main = "Frequência de Comprimentos da Sépala",
+        xlab = "Comprimento da Sépala",
+        ylab = "Frequência",
+        col = "lightblue",
+        border = "gray")
+
+# Gráfico padrão (tipo linha)
+plot(frequencias,
+     type = "h",
+     main = "Frequência de Comprimentos da Sépala (Plot padrão)",
+     xlab = "Comprimento da Sépala",
+     ylab = "Frequência")
 
