@@ -1,1 +1,57 @@
+# Arquivo: Plot.R
+# Curso: R - Uma Introdução (com RStudio)
+
+# CARREGAR PACOTES ##########################################
+
+library(datasets)       # Pacotes base com conjuntos de dados
+library(modelsummary)   # Para resumos estatísticos
+library(tidyverse)      # Conjunto de pacotes para manipulação e visualização de dados
+
+# CARREGAR DADOS ############################################
+
+head(iris)              # Primeiras linhas do dataset
+glimpse(iris)           # Visão geral das variáveis
+datasummary_skim(iris)  # Estatísticas descritivas resumidas
+
+# PLOTAGEM BÁSICA COM plot() ################################
+
+?plot  # Ajuda da função plot()
+
+# Variável categórica
+plot(iris$Species)
+
+# Variável quantitativa
+plot(iris$Petal.Length)
+
+# Categórica × Quantitativa
+plot(iris$Species, iris$Petal.Width)
+
+# Quantitativas em par
+plot(iris$Petal.Length, iris$Petal.Width)
+
+# Todo o data frame (pares de variáveis)
+plot(iris)
+
+# Plotagem com opções
+plot(iris$Petal.Length, iris$Petal.Width,
+     col = "#cc0000",     # Cor vermelha (hex)
+     pch = 19,            # Pontos preenchidos
+     main = "Iris: Comprimento vs. Largura da Pétala",
+     xlab = "Comprimento da Pétala",
+     ylab = "Largura da Pétala")
+
+# PLOTAGEM DE FUNÇÕES #######################################
+
+# Funções matemáticas básicas
+plot(cos, 0, 2*pi)      # Cosseno entre 0 e 2π
+plot(exp, 1, 5)         # Exponencial entre 1 e 5
+plot(dnorm, -3, +3)     # Densidade normal padrão
+
+# Com opções visuais
+plot(dnorm, -3, +3,
+     col = "#cc0000",    # Cor vermelha
+     lwd = 5,            # Espessura da linha
+     main = "Distribuição Normal Padrão",
+     xlab = "Escores-z",
+     ylab = "Densidade")
 
