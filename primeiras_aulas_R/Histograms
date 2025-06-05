@@ -1,1 +1,67 @@
+# Arquivo: Histograms.R
+# Curso: R - Uma Introdução (com RStudio)
+
+# CARREGAR PACOTES ##########################################
+
+library(datasets)  # Pacote base com conjuntos de dados
+
+# CARREGAR DADOS ############################################
+
+?iris          # Ajuda sobre o conjunto de dados iris
+head(iris)     # Visualizar as primeiras linhas do conjunto
+
+# HISTOGRAMAS BÁSICOS ########################################
+
+# Histogramas simples para cada variável quantitativa
+hist(iris$Sepal.Length,
+     main = "Histograma: Comprimento da Sépala",
+     xlab = "Comprimento (cm)",
+     col = "lightblue")
+
+hist(iris$Sepal.Width,
+     main = "Histograma: Largura da Sépala",
+     xlab = "Largura (cm)",
+     col = "lightgreen")
+
+hist(iris$Petal.Length,
+     main = "Histograma: Comprimento da Pétala",
+     xlab = "Comprimento (cm)",
+     col = "lightpink")
+
+hist(iris$Petal.Width,
+     main = "Histograma: Largura da Pétala",
+     xlab = "Largura (cm)",
+     col = "lightyellow")
+
+# HISTOGRAMAS POR GRUPO (ESPÉCIE) ############################
+
+# Organizar a janela gráfica em 3 linhas por 1 coluna
+par(mfrow = c(3, 1))
+
+# Histograma para Petal.Width da espécie Setosa
+hist(iris$Petal.Width[iris$Species == "setosa"],
+     xlim = c(0, 3),
+     breaks = 9,
+     main = "Largura da Pétala - Setosa",
+     xlab = "Largura (cm)",
+     col = "red")
+
+# Histograma para Petal.Width da espécie Versicolor
+hist(iris$Petal.Width[iris$Species == "versicolor"],
+     xlim = c(0, 3),
+     breaks = 9,
+     main = "Largura da Pétala - Versicolor",
+     xlab = "Largura (cm)",
+     col = "purple")
+
+# Histograma para Petal.Width da espécie Virginica
+hist(iris$Petal.Width[iris$Species == "virginica"],
+     xlim = c(0, 3),
+     breaks = 9,
+     main = "Largura da Pétala - Virginica",
+     xlab = "Largura (cm)",
+     col = "blue")
+
+# Restaurar o layout gráfico padrão (1 linha, 1 coluna)
+par(mfrow = c(1, 1))
 
