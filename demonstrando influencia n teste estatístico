@@ -1,26 +1,27 @@
-library(gt)
 library(dplyr)
-library(broom)
-library(effectsize) 
+library(effectsize)
 
-source('/Users/marcelosilva/Library/CloudStorage/OneDrive-UniversidadeFederaldeUberlândia/UFU/Cursos/IPA66/Arquivos R/Minhas funções/Funçao formatar tabela teste t.R')
+set.seed(123)
 
+dados <- data.frame(
+  a = rnorm(300, 25.3,2),
+  b = rnorm(300, 24.8,2)
+)
 
-# seed(123)
-# a <- rnorm(300, 25.3,2)
-# b <- rnorm(300, 24.8,2)
+t.test(dados$a, dados$b,var.equal = T)
 
-resultado <- t.test(a,b,var.equal = T)
-formatar_t_test(resultado)
+c <- rnorm(30, 25.3,2)
+d <- rnorm(30, 24.8,2)
 
+dados_n_pequeno <- data.frame(
+  c = rnorm(30, 25.3,2),
+  d = rnorm(30, 24.8,2)
+)
 
-# c <- rnorm(30, 25.3,2)
-# d <- rnorm(30, 24.8,2)
-
-resultado1 <- t.test(c,d,var.equal = T)
-formatar_t_test(resultado1)
+t.test(dados_n_pequeno$c, dados_n_pequeno$d,var.equal = T)
 
 ## AVALIANDO O PODER DO EFEITO
 
-cohens_d(a,b)
-cohens_d(c,d)
+cohens_d(dados$a, dados$b)
+cohens_d(dados_n_pequeno$c, dados_n_pequeno$d)
+
