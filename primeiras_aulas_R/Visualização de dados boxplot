@@ -1,1 +1,92 @@
 
+#===============================
+# 📦 Carregando os pacotes
+#===============================
+library(tidyverse) # o ggplot esta dentro do tidyverse
+
+#===============================
+# 📁 Lendo o dataset
+#===============================
+metabric <- read.csv('data/metabric.csv')
+
+#===============================
+# 1. GRÁFICO BOXPLOT BÁSICO
+#===============================
+## Aesthitics --> o mapeamento do que eu vou plotar
+metabric %>% 
+  ggplot(aes(x=Quimioterapia,y=Overall.Survival..Months.)) +
+  geom_boxplot(outliers = F)
+
+#===============================
+# 2. AJUSTANDO TAMANHO E COR FIXA
+#===============================
+metabric %>% 
+  ggplot(aes(x=Quimioterapia,y=Overall.Survival..Months.)) +
+  geom_boxplot(outliers = F)
+
+#===============================================
+# 3. ADICIONANDO OS CASOS NO PLOT
+#===============================================
+metabric %>% 
+  ggplot(aes(x=Quimioterapia,y=Overall.Survival..Months.)) +
+  geom_jitter()+
+  geom_boxplot(outliers = F)
+  
+
+#===============================================================
+# 4. ADICIONANDO TRANSPARÊNCIA NO BOXPLOT E AJUSTANDO PONTOS NO JITTER
+#===============================================================
+
+metabric %>% 
+  ggplot(aes(x=Quimioterapia,y=Overall.Survival..Months.)) +
+  geom_jitter(shape = 21, size = 1, width = 0.4)+
+  geom_boxplot(outliers = F, alpha = 0.6)
+
+
+#===========================================
+# 5. ADICIONANDO RÓTULOS E TEMA MAIS LIMPO
+#===========================================
+
+metabric %>% 
+  ggplot(aes(x=Quimioterapia,y=Overall.Survival..Months.)) +
+  geom_jitter(shape = 21, size = 1, width = 0.4)+
+  geom_boxplot(outliers = F, alpha = 0.6) +
+  labs(
+    x = 'Quimioterapia',
+    y = 'Sobrevivência geral (meses)'
+  ) + 
+  theme_classic()
+
+#===========================================
+# 6. CRIANDO OBJETO 'p' COM ESTILO DEFINIDO
+#===========================================
+
+p <-   metabric %>% 
+  ggplot(aes(x=Quimioterapia,y=Overall.Survival..Months.)) +
+  geom_jitter(aes(size = Linfonodos.positivos.examinados), shape = 21, width = 0.4)+
+  geom_boxplot(outliers = F, alpha = 0.6) +
+  labs(
+    x = 'Quimioterapia',
+    y = 'Sobrevivência geral (meses)',
+    size = 'Linfonodos positivos'
+  ) + 
+  theme_classic() +
+    theme(
+      legend.position = 'top',
+    axis.title.x = element_text(size = 14, color = 'black'),
+    axis.title.y = element_text(size = 14, color = 'black'),
+    axis.text.x = element_text(size = 14),
+    axis.text.y = element_text(size = 14)
+  )
+p
+#===============================================
+# 7. SUBDIVISÃO POR STATUS DO RECEPTOR DE ESTROGÊNIO (ER)
+#===============================================
+
+p + facet_wrap(~ER.Status)
+#=========================================
+# 8. FACETANDO POR ER E HER2 SIMULTANEAMENTE
+#=========================================
+p + facet_wrap(ER.Status ~ HER2.Status)
+
+
