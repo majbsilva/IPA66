@@ -73,7 +73,8 @@ metabric %>%
   geom_histogram(aes(fill = ..count..), bins = 30, color = 'black') +
   facet_wrap(~Tipo.de.cirurgia.da.mama) 
 
-## Fazendo o gráfico de densidade --> Quando se usa geom_histogram() sem especificar y = ..density.., o eixo y representa a contagem de observações em cada bin (barra do histograma). Isso significa que a altura de cada barra corresponde ao número de observações que caem dentro do intervalo definido por aquele bin.Quando se especifica y = ..density.. dentro de aes() no geom_histogram(), o eixo y é escalado para representar a densidade das observações. A densidade é calculada de tal forma que a área total sob o histograma é igual a 1.
+## Fazendo o gráfico de densidade 
+### Quando se usa geom_histogram() sem especificar y = ..density.., o eixo y representa a contagem de observações em cada bin (barra do histograma). Isso significa que a altura de cada barra corresponde ao número de observações que caem dentro do intervalo definido por aquele bin.Quando se especifica y = ..density.. dentro de aes() no geom_histogram(), o eixo y é escalado para representar a densidade das observações. A densidade é calculada de tal forma que a área total sob o histograma é igual a 1.
 
 metabric %>% 
   ggplot(aes(x = Idade.no.Diagnóstico)) +
