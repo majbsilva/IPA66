@@ -1,4 +1,4 @@
-# Arquivo: Histograms.R
+# Arquivo: Histograms, QQplot e cálculo de normalidade.R
 # Curso: R - Uma Introdução (com RStudio)
 
 # CARREGAR PACOTES ##########################################
@@ -17,6 +17,7 @@ hist(iris$Sepal.Length,
      main = "Histograma: Comprimento da Sépala",
      xlab = "Comprimento (cm)",
      col = "lightblue")
+
 
 hist(iris$Sepal.Width,
      main = "Histograma: Largura da Sépala",
@@ -61,6 +62,58 @@ hist(iris$Petal.Width[iris$Species == "virginica"],
      main = "Largura da Pétala - Virginica",
      xlab = "Largura (cm)",
      col = "blue")
+
+# Restaurar o layout gráfico padrão (1 linha, 1 coluna)
+par(mfrow = c(1, 1))
+
+# HISTOGRAMA COM O GGPLOT ##########################################
+library(tidyverse)
+metabric %>% 
+  ggplot(aes(x = Idade.no.Diagnóstico)) +
+  geom_histogram(aes(fill = ..count..), bins = 30, color = 'black') +
+  facet_wrap(~Tipo.de.cirurgia.da.mama) 
+
+## Fazendo o gráfico de densidade --> Quando se usa geom_histogram() sem especificar y = ..density.., o eixo y representa a contagem de observações em cada bin (barra do histograma). Isso significa que a altura de cada barra corresponde ao número de observações que caem dentro do intervalo definido por aquele bin.Quando se especifica y = ..density.. dentro de aes() no geom_histogram(), o eixo y é escalado para representar a densidade das observações. A densidade é calculada de tal forma que a área total sob o histograma é igual a 1.
+
+metabric %>% 
+  ggplot(aes(x = Idade.no.Diagnóstico)) +
+  geom_histogram(aes(y = ..density..),fill = 'white', color = 'black', bins = 30) +
+  geom_density(alpha = 0.2, fill = 'blue')
+facet_wrap(~Tipo.de.cirurgia.da.mama) 
+
+# QUANTILE QUANTILE PLOT (QQplot) ##########################################
+
+metabric %>% 
+  ggplot(aes(sample = Idade.no.Diagnóstico)) + # O argumento sample dentro de aes() é usado para especificar a variável cujos quantis serão comparados com os quantis teóricos
+  stat_qq() +
+  stat_qq_line(color = 'red', linewidth = 1) +
+  facet_wrap(~Tipo.de.cirurgia.da.mama)
+
+# CÁLCULO DA NORMALIDADE ##########################################
+
+shapiro.test(metabric$Idade.no.Diagnóstico)
+qqnorm(metabric$Idade.no.Diagnóstico)
+qqline(metabric$Idade.no.Diagnóstico)
+hist(metabric$Idade.no.Diagnóstico)
+
+## Avaliando a normalidade agrupando os dados por tipo de cirurgia
+library(DescTools) # Função Desc
+library(modelsummary) # Função datasummary_skim
+library(pastecs) # Função stat.desc
+
+
+by(metabric$Idade.no.Diagnóstico, metabric$Tipo.de.cirurgia.da.mama, stat.desc, norm = T)
+
+Desc(metabric$Idade.no.Diagnóstico[metabric$Tipo.de.cirurgia.da.mama == 'MASTECTOMY'])
+
+datasummary_skim(metabric[metabric$Tipo.de.cirurgia.da.mama == 'MASTECTOMY',])
+
+
+
+
+
+
+
 
 # Restaurar o layout gráfico padrão (1 linha, 1 coluna)
 par(mfrow = c(1, 1))
