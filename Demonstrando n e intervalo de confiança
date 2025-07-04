@@ -1,0 +1,56 @@
+# Carregar o pacote ggplot2
+library(ggplot2)
+
+# Função para calcular o intervalo de confiança
+calculate_ci <- function(sample, conf.level = 0.95) {
+  n <- length(sample)
+  sample_mean <- mean(sample)
+  sample_sd <- sd(sample)
+  error_margin <- qnorm((1 + conf.level) / 2) * sample_sd / sqrt(n)
+  ci_lower <- sample_mean - error_margin
+  ci_upper <- sample_mean + error_margin
+  return(data.frame(mean = sample_mean, lower = ci_lower, upper = ci_upper))
+}
+
+# Diferentes tamanhos de amostra para testar
+sample_sizes <- c(10, 30, 50, 100, 200)
+
+# Lista para armazenar intervalos de confiança
+confidence_intervals <- list()
+
+# Gerar amostras e calcular intervalos de confiança
+for (n in sample_sizes) {
+  sample <- rnorm(n, mean = 50, sd = 10)  # Gerar amostra a partir de uma distribuição normal
+  ci <- calculate_ci(sample)
+  confidence_intervals[[paste("n=", n, sep = "")]] <- ci
+}
+
+# Preparar dados para o gráfico
+plot_data <- data.frame(
+  size = integer(),
+  mean = numeric(),
+  lower = numeric(),
+  upper = numeric()
+)
+
+for (i in seq_along(sample_sizes)) {
+  size <- sample_sizes[i]
+  ci <- confidence_intervals[[paste("n=", size, sep = "")]]
+  plot_data <- rbind(plot_data, data.frame(
+    size = size,
+    mean = ci$mean,
+    lower = ci$lower,
+    upper = ci$upper
+  ))
+}
+
+# Criar o gráfico
+ggplot(plot_data, aes(x = size, y = mean)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.1) +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "red") +
+  labs(title = "Influence of Sample Size on Confidence Interval",
+       x = "Sample Size (n)",
+       y = "Confidence Interval") +
+  theme_minimal()
+
