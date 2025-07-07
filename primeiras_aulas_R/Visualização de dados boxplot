@@ -60,6 +60,15 @@ metabric %>%
 #===========================================
 # 6. CRIANDO OBJETO 'p' COM ESTILO DEFINIDO
 #===========================================
+## Alterando o nível das variáveis para ficar correto no gráfico
+
+metabric <- metabric %>% 
+  mutate(
+    ER.Status = factor(ER.Status) %>% 
+      fct_recode('ER negative' = 'Negative', 'ER positive' = 'Positive'),
+    HER2.Status = factor(HER2.Status) %>%
+      fct_recode('ER negative' = 'Negative', 'ER positive' = 'Positive')
+  )
 
 p <-   metabric %>% 
   ggplot(aes(x=Quimioterapia,y=Overall.Survival..Months.)) +
