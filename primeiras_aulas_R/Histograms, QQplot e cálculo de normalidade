@@ -103,11 +103,19 @@ library(modelsummary) # Função datasummary_skim
 library(pastecs) # Função stat.desc
 
 
-by(metabric$Idade.no.Diagnóstico, metabric$Tipo.de.cirurgia.da.mama, stat.desc, norm = T)
+by(metabric$Idade.no.Diagnóstico,metabric$Tipo.de.cirurgia.da.mama, stat.desc, norm = T)
 
 Desc(metabric$Idade.no.Diagnóstico[metabric$Tipo.de.cirurgia.da.mama == 'MASTECTOMY'])
 
-datasummary_skim(metabric[metabric$Tipo.de.cirurgia.da.mama == 'MASTECTOMY',])
+Desc(metabric$Idade.no.Diagnóstico[metabric$Tipo.de.cirurgia.da.mama == 'BREAST CONSERVING'])
+
+stats <- list(
+  Mastectomia = Desc(metabric$Idade.no.Diagnóstico[metabric$Tipo.de.cirurgia.da.mama == 'MASTECTOMY']),
+  Conservativa = Desc(metabric$Idade.no.Diagnóstico[metabric$Tipo.de.cirurgia.da.mama == 'BREAST CONSERVING']),
+  Mastectomia_linf = Desc(metabric$Linfonodos.positivos.examinados[metabric$Tipo.de.cirurgia.da.mama == 'MASTECTOMY']),
+  Conservativa_linf = Desc(metabric$Linfonodos.positivos.examinados[metabric$Tipo.de.cirurgia.da.mama == 'MASTECTOMY'])
+)
+capture.output(stats, file = 'stat.txt')
 
 
 
