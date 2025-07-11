@@ -25,3 +25,36 @@ t.test(dados_n_pequeno$c, dados_n_pequeno$d,var.equal = T)
 cohens_d(dados$a, dados$b)
 cohens_d(dados_n_pequeno$c, dados_n_pequeno$d)
 
+## OUTRO EXEMPLO
+library(tidyverse)
+library(effectsize)
+
+set.seed(123)
+
+controle <- rnorm(500,125,4) # pressão arterial sistólica média no grupo controle (mmHg)
+tratado <- rnorm(500,124,4) # pressão arterial sistólica média no grupo tratado (mmHg)
+
+dados_pressao <- data.frame(
+  Pressao = c(controle, tratado),
+  Grupo = factor(rep(c('Controle', 'Tratado'), each = 500))
+)
+
+t.test(Pressao~Grupo, data = dados_pressao, var.equal = T)
+
+## AVALIANDO O PODER DO EFEITO
+
+### Cohen's d
+cohens_d(Pressao ~ Grupo, data = dados_pressao)
+
+
+### Hedges' g
+hedges_g(Pressao ~ Grupo, data = dados_pressao) # Uma correção do Cohen's d que ajusta para viés em pequenas amostras. É especialmente útil quando o tamanho da amostra é pequeno.
+
+## VISUALIZANDO OS DADOS
+
+ggplot(dados_pressao, aes(x = Grupo, y = Pressao, fill = Grupo)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Pressão Arterial Sistólica por Grupo",
+       y = "Pressão (mmHg)")
+
