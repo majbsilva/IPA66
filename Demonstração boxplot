@@ -1,1 +1,26 @@
+library(ggplot2)
+
+# Sample data: Cytokine expression in two groups
+data <- data.frame(
+  group = rep(c("Control", "Leukemia"), each = 50),
+  cytokine_level = c(rnorm(50, mean = 10, sd = 2), rnorm(50, mean = 15, sd = 3))
+)
+
+# Create a clean, publication-ready plot
+ggplot(data, aes(x = group, y = cytokine_level, fill = group)) +
+  geom_jitter(shape = 21, alpha = 0.4) +
+  geom_boxplot(alpha = 0.7, outliers = F) +
+  scale_fill_manual(values = c("#1f77b4", "#ff7f0e")) + # Custom colors
+  theme_minimal() +
+  labs(title = "Cytokine Expression in Leukemia vs. Control",
+       x = "Group", y = "Cytokine Level (pg/mL)", fill = 'Group') +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 13),
+    legend.position = 'none'
+  )
+
+# Save the plot
+ggsave("cytokine_plot.jpeg", width = 6, height = 4, dpi = 300)
 
