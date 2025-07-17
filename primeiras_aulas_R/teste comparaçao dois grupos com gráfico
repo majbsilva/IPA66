@@ -18,8 +18,10 @@ library(DescTools)
 library(ggstatsplot)
 
 # =============================================================================
-# Estatísticas Sumárias
+# Resumo estatístico
 # =============================================================================
+
+## Fazer uma comparação entre grupos HER2 status, dessas variáveis. Teste de comparação: normalidade e homogeneidade.
 
 metabric %>% get_summary_stats(Idade.no.Diagnóstico, Linfonodos.positivos.examinados, Overall.Survival..Months.)
 
@@ -83,6 +85,15 @@ metabric %>%
 
 teste_t <- metabric %>%
   t_test(Idade.no.Diagnóstico ~ HER2.Status, detailed = T)
+
+## Tamanho de efeito=============
+library(effectsize)
+cohens_d(metabric$Idade.no.Diagnóstico~metabric$HER2.Status)
+wilcox_test()
+
+metabric %>% 
+  wilcox_effsize(Linfonodos.positivos.examinados~HER2.Status)
+
 
 # =============================================================================
 # Gráfico de Comparação entre Grupos
