@@ -1,1 +1,123 @@
+# =============================================================================
+# Aula: Análise Estatística com Teste para dois grupos
+# Curso: Estatística Aplicada
+# Assunto: Teste T e Visualização de Dados - Estudo de Caso Metabric
+# =============================================================================
+
+
+# =============================================================================
+# Carregando Bibliotecas
+# =============================================================================
+
+library(rstatix)
+library(flextable)
+library(ggplot2)
+library(ggpubr)
+library(dplyr)
+library(DescTools)
+library(ggstatsplot)
+
+# =============================================================================
+# Estatísticas Sumárias
+# =============================================================================
+
+metabric %>% get_summary_stats(Idade.no.Diagnóstico, Linfonodos.positivos.examinados, Overall.Survival..Months.)
+
+metabric %>%
+  group_by(HER2.Status) %>%
+  get_summary_stats(Idade.no.Diagnóstico, Linfonodos.positivos.examinados, Overall.Survival..Months.) %>%
+  as.data.frame() %>%
+  flextable()
+
+# =============================================================================
+# Descrição por Status
+# =============================================================================
+
+Desc(metabric$Idade.no.Diagnóstico[metabric$HER2.Status == 'Negative'])
+Desc(metabric$Idade.no.Diagnóstico[metabric$HER2.Status == 'Positive'])
+
+# =============================================================================
+# Teste de Normalidade de Shapiro-Wilk
+# =============================================================================
+
+metabric %>%
+  group_by(HER2.Status) %>%
+  shapiro_test(Idade.no.Diagnóstico, Linfonodos.positivos.examinados, Overall.Survival..Months.) %>%
+  as.data.frame() %>%
+  flextable()
+
+# =============================================================================
+# Gráfico Q-Q Plot
+# =============================================================================
+
+metabric %>%
+  ggplot(aes(sample = Idade.no.Diagnóstico)) +
+  stat_qq() +
+  stat_qq_line() +
+  facet_wrap(~HER2.Status)
+
+# =============================================================================
+# Boxplot da Idade no Diagnóstico
+# =============================================================================
+
+metabric %>%
+  ggplot(aes(x = HER2.Status, y = Idade.no.Diagnóstico)) +
+  geom_boxplot()
+
+# =============================================================================
+# Teste de Levene para Homogeneidade de Variâncias
+# =============================================================================
+
+metabric %>%
+  levene_test(Idade.no.Diagnóstico ~ HER2.Status) %>%
+  flextable()
+
+# =============================================================================
+# Teste T 
+# =============================================================================
+
+metabric %>%
+  t_test(Idade.no.Diagnóstico ~ HER2.Status, detailed = T) %>%
+  as.data.frame() %>%
+  flextable()
+
+teste_t <- metabric %>%
+  t_test(Idade.no.Diagnóstico ~ HER2.Status, detailed = T)
+
+# =============================================================================
+# Gráfico de Comparação entre Grupos
+# =============================================================================
+
+library(ggplot2)
+ggbetweenstats(
+  x = HER2.Status,
+  y = Idade.no.Diagnóstico,
+  data = metabric,
+  violin.args = list(width = 0, linewidth = 0),
+  xlab = 'HER2 status',
+  ylab = 'Idade no diagnóstico (anos)',
+  type = 'parametric',
+  var.equal = F,
+  effsize.type = 'unbiased',
+  results.subtitle = T,
+  bf.message = F,
+  p.adjust.method = 'none',
+  ggsignif.args = list(
+    textsize = 5,
+    tip_length = 0.04,
+    step_increase = 0.1,
+    map_signif_level = TRUE,
+    na.rm = TRUE
+  ),
+  centrality.label.args = list(size = 4, nudge_x = 0.3, segment.linetype = 4,
+                               min.segment.length = 0),
+  point.args = list(position = ggplot2::position_jitterdodge(dodge.width = 0.6), alpha =
+                      0.8, size = 3, stroke = 0, na.rm = TRUE),
+  ggtheme = ggplot2::theme_minimal() +
+    ggplot2::theme(
+      axis.title = element_text(size = 16),
+      axis.text = element_text(size = 14),
+      plot.subtitle = element_text(size = 14)
+    )
+)
 
