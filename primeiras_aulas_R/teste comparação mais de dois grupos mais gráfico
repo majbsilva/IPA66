@@ -1,1 +1,148 @@
+# =============================================================================
+# Aula: Comparação de Grupos - ANOVA e Testes Não Paramétricos
+# Curso: Estatística Aplicada
+# Estudo de Caso: Metabric
+# =============================================================================
+
+# =============================================================================
+# Objetivo:
+# Comparar a idade no diagnóstico entre diferentes subtipos moleculares
+# usando testes paramétricos (ANOVA) e não paramétricos (Kruskal-Wallis).
+#
+# NOTAS DIDÁTICAS:
+# 🧠 Quando usar cada teste?
+# - Use ANOVA padrão: se normalidade e homogeneidade de variâncias forem atendidas.
+# - Use ANOVA com Games-Howell: se a normalidade for atendida, mas a homogeneidade não.
+# - Use Kruskal-Wallis com pós-teste de Dunn: se a normalidade NÃO for atendida.
+# =============================================================================
+
+
+# =============================================================================
+# Carregando Bibliotecas
+# =============================================================================
+
+library(rstatix)
+library(flextable)
+library(ggplot2)
+library(ggpubr)
+library(dplyr)
+library(DescTools)
+library(ggstatsplot)
+library(effectsize)
+
+# =============================================================================
+# Resumo estatístico por Subtipo Molecular PAM50
+# =============================================================================
+
+metabric %>% 
+  group_by(Pam50...Claudin.low.subtype) %>%
+  get_summary_stats(Idade.no.Diagnóstico) %>%
+  as.data.frame() %>%
+  flextable()
+
+# =============================================================================
+# Teste de Normalidade (Shapiro-Wilk por grupo)
+# Verifica se os dados seguem distribuição normal em cada grupo.
+# =============================================================================
+
+metabric %>%
+  group_by(Pam50...Claudin.low.subtype) %>%
+  shapiro_test(Idade.no.Diagnóstico) %>%
+  flextable()
+
+# =============================================================================
+# Teste de Homogeneidade de Variâncias (Levene)
+# Verifica se as variâncias são iguais entre os grupos.
+# =============================================================================
+
+metabric %>%
+  levene_test(Idade.no.Diagnóstico ~ Pam50...Claudin.low.subtype) %>%
+  flextable()
+
+# =============================================================================
+# Gráfico Q-Q Plot para normalidade visual
+# =============================================================================
+
+metabric %>%
+  ggplot(aes(sample = Idade.no.Diagnóstico)) +
+  stat_qq() +
+  stat_qq_line() +
+  facet_wrap(~Pam50...Claudin.low.subtype) +
+  theme_minimal()
+
+# =============================================================================
+# Boxplot da Idade no Diagnóstico por Subtipo Molecular
+# =============================================================================
+
+metabric %>%
+  ggplot(aes(x = Pam50...Claudin.low.subtype, y = Idade.no.Diagnóstico)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(x = "Subtipo Molecular PAM50/Claudin-low", y = "Idade no Diagnóstico")
+
+# =============================================================================
+# ANOVA (paramétrico) - se normalidade e homogeneidade forem atendidas
+# =============================================================================
+
+anova_res <- metabric %>% anova_test(Idade.no.Diagnóstico ~ Pam50...Claudin.low.subtype)
+anova_res %>% flextable()
+
+# =============================================================================
+# Tamanho do Efeito
+# Eta²: proporção da variância explicada pelo modelo.
+# Omega²: estimativa menos enviesada da variância explicada.
+# =============================================================================
+
+eta_squared(anova_res)
+omega_squared(anova_res)
+
+# =============================================================================
+# Pós-Teste Paramétrico: Games-Howell
+# Indicado quando há quebra de homogeneidade de variâncias.
+# =============================================================================
+
+games_post <- metabric %>% 
+  games_howell_test(Idade.no.Diagnóstico ~ Pam50...Claudin.low.subtype)
+games_post %>% flextable()
+
+# =============================================================================
+# Kruskal-Wallis (não paramétrico) - se normalidade não for atendida
+# =============================================================================
+
+kruskal_res <- metabric %>%
+  kruskal_test(Idade.no.Diagnóstico ~ Pam50...Claudin.low.subtype)
+kruskal_res %>% flextable()
+
+# =============================================================================
+# Pós-Teste Não Paramétrico: Dunn (Gunn) com ajuste de Holm
+# Usado após Kruskal-Wallis para comparações múltiplas.
+# =============================================================================
+
+dunn_post <- metabric %>%
+  dunn_test(Idade.no.Diagnóstico ~ Pam50...Claudin.low.subtype, p.adjust.method = "holm")
+dunn_post %>% flextable()
+
+# =============================================================================
+# Gráfico Estatístico Comparativo entre Grupos com Medidas de Efeito
+# O parâmetro 'var.equal = FALSE' ativa automaticamente o teste de Games-Howell.
+# =============================================================================
+
+ggbetweenstats(
+  data = metabric,
+  x = Pam50...Claudin.low.subtype,
+  y = Idade.no.Diagnóstico,
+  type = 'parametric',   # Pode mudar para 'nonparametric' se preferir
+  var.equal = FALSE,     # FALSE ativa Games-Howell
+  effsize.type = 'omega',
+  results.subtitle = TRUE,
+  bf.message = FALSE,
+  xlab = "Subtipo Molecular PAM50/Claudin-low",
+  ylab = "Idade no Diagnóstico (anos)",
+  ggtheme = ggplot2::theme_minimal() +
+    ggplot2::theme(
+      axis.title = element_text(size = 16),
+      axis.text = element_text(size = 14),
+      plot.subtitle = element_text(size = 14)
+    )
+)
 
