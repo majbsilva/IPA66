@@ -218,16 +218,17 @@ metabric %>%
 # =============================================================================
 
 ggbetweenstats(
-  data = metabric[metabric$Pam50...Claudin.low.subtype != 'NC',],
+  data = metabric,
   x = Pam50...Claudin.low.subtype,
   y = Overall.Survival..Months.,
-  type = 'parametric',   # Pode mudar para 'nonparametric' se preferir
-  var.equal = FALSE,     # FALSE ativa Games-Howell
+  type = 'nonparametric',   # Pode mudar para 'nonparametric' se preferir. Ai ativa o post-test de Dunn
+  var.equal = FALSE,     # FALSE ativa Games-Howell e a correção de Welch
   effsize.type = 'omega',
   results.subtitle = TRUE,
   bf.message = FALSE,
   xlab = "Subtipo Molecular PAM50/Claudin-low",
   ylab = "Overall Survival (meses)",
+  ggsignif.args = list(textsize = 4, tip_length = 0.05, na.rm = TRUE),
   ggtheme = ggplot2::theme_minimal() +
     ggplot2::theme(
       axis.title = element_text(size = 16),
