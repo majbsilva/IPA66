@@ -128,6 +128,21 @@ anova_res <- aov(Overall.Survival..Months. ~ Pam50...Claudin.low.subtype, data =
 summary(anova_res)
 
 # =============================================================================
+# CHECANDO A DISTRIBUIÇÃO DOS RESÍDUOS DO ANOVA NO CASO DE DÚVIDA DA DISTRIBUIÇÃO
+# =============================================================================
+
+residuos <- residuals(anova_res)
+shapiro.test(residuos)
+
+qqnorm(residuos)
+qqline(residuos)
+
+hist(residuos)
+
+stat.desc(residuos, basic = F, norm = T)
+
+
+# =============================================================================
 # ANOVA (paramétrico) - se normalidade foi atendida mas homogeneidade não foi (correção de Welch)
 # =============================================================================
 
