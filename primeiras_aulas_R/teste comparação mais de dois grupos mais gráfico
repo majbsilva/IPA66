@@ -226,7 +226,6 @@ ggbetweenstats(
   effsize.type = 'omega',
   results.subtitle = TRUE,
   bf.message = FALSE,
-  message - FALSE,
   xlab = "Subtipo Molecular PAM50/Claudin-low",
   ylab = "Overall Survival (meses)",
   ggtheme = ggplot2::theme_minimal() +
