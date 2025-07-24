@@ -39,16 +39,6 @@ Desc(metabric$Idade.no.Diagnóstico[metabric$HER2.Status == 'Negative'])
 Desc(metabric$Idade.no.Diagnóstico[metabric$HER2.Status == 'Positive'])
 
 # =============================================================================
-# Teste de Normalidade de Shapiro-Wilk
-# =============================================================================
-
-metabric %>%
-  group_by(HER2.Status) %>%
-  shapiro_test(Idade.no.Diagnóstico, Linfonodos.positivos.examinados, Overall.Survival..Months.) %>%
-  as.data.frame() %>%
-  flextable()
-
-# =============================================================================
 # Gráfico Q-Q Plot
 # =============================================================================
 
@@ -57,6 +47,16 @@ metabric %>%
   stat_qq() +
   stat_qq_line() +
   facet_wrap(~HER2.Status)
+
+# =============================================================================
+# Teste de Normalidade de Shapiro-Wilk
+# =============================================================================
+
+metabric %>%
+  group_by(HER2.Status) %>%
+  shapiro_test(Idade.no.Diagnóstico, Linfonodos.positivos.examinados, Overall.Survival..Months.) %>%
+  as.data.frame() %>%
+  flextable()
 
 # =============================================================================
 # Boxplot da Idade no Diagnóstico
