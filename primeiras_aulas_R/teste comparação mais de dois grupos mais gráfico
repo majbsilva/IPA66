@@ -54,35 +54,6 @@ by(metabric$Overall.Survival..Months.,
 )
 
 # =============================================================================
-# Teste de Normalidade (Shapiro-Wilk por grupo)
-# Verifica se os dados seguem distribuição normal em cada grupo.
-# =============================================================================
-
-metabric %>%
-  group_by(Pam50...Claudin.low.subtype) %>%
-  shapiro_test(Overall.Survival..Months.) %>%
-  gt() %>%
-  fmt_number(
-    columns = where(is.numeric), 
-    decimals = 3, 
-    dec_mark = "."
-  )
-
-# =============================================================================
-# Teste de Homogeneidade de Variâncias (Levene)
-# Verifica se as variâncias são iguais entre os grupos.
-# =============================================================================
-
-metabric %>%
-  levene_test(Overall.Survival..Months. ~ Pam50...Claudin.low.subtype) %>%
-  gt() %>%
-  fmt_number(
-    columns = where(is.numeric), 
-    decimals = 1, 
-    dec_mark = "."
-  )
-
-# =============================================================================
 # Gráfico Q-Q Plot para normalidade visual
 # =============================================================================
 
@@ -110,7 +81,22 @@ metabric %>%
   theme(legend.position = "none")
 
 # =============================================================================
-# Boxplot da Sobrevida Geral por Subtipo Molecular
+# Teste de Normalidade (Shapiro-Wilk por grupo)
+# Verifica se os dados seguem distribuição normal em cada grupo.
+# =============================================================================
+
+metabric %>%
+  group_by(Pam50...Claudin.low.subtype) %>%
+  shapiro_test(Overall.Survival..Months.) %>%
+  gt() %>%
+  fmt_number(
+    columns = where(is.numeric), 
+    decimals = 3, 
+    dec_mark = "."
+  )
+
+# =============================================================================
+# Boxplot da Sobrevida Geral por Subtipo Molecular para ver homogeneidade da variância
 # =============================================================================
 
 metabric %>%
@@ -118,6 +104,20 @@ metabric %>%
   geom_boxplot() +
   theme_minimal() +
   labs(x = "Subtipo Molecular PAM50/Claudin-low", y = "Overall Survival (meses)")
+
+# =============================================================================
+# Teste de Homogeneidade de Variâncias (Levene)
+# Verifica se as variâncias são iguais entre os grupos.
+# =============================================================================
+
+metabric %>%
+  levene_test(Overall.Survival..Months. ~ Pam50...Claudin.low.subtype) %>%
+  gt() %>%
+  fmt_number(
+    columns = where(is.numeric), 
+    decimals = 1, 
+    dec_mark = "."
+  )
 
 # =============================================================================
 # ANOVA (paramétrico) - se normalidade e homogeneidade forem atendidas
@@ -171,7 +171,6 @@ effectsize::eta_squared(anova_res, alternative = 'two.sided') %>%
     decimals = 3, 
     dec_mark = "."
   )
-
 
 # =============================================================================
 # Pós-Teste Paramétrico: Tukey para melhor controle do erro do tipo I
