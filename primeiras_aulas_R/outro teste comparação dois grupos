@@ -9,14 +9,11 @@
 # Carregando Bibliotecas
 # =============================================================================
 
+library(tidyverse)
 library(rstatix)
 library(flextable)
-library(ggplot2)
-library(ggpubr)
-library(dplyr)
 library(DescTools)
 library(ggstatsplot)
-library(datasets)
 
 
 # =============================================================================
